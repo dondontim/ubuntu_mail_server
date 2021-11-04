@@ -107,6 +107,7 @@ function press_anything_to_continue() {
 
 function check_if_running_as_root() {
   # TODO(tim): do same as below but return exit code instead
+  :
 }
 
 function script_requires_root_to_run() {

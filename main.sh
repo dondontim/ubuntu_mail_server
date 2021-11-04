@@ -2,7 +2,7 @@
 #
 #
 
-#sudo apt-get update -y && sudo apt-get upgrade -y && apt-get install -y git curl && git clone https://github.com/dondontim/setup.git && cd setup
+#sudo apt-get update -y && sudo apt-get upgrade -y && apt-get install -y git curl && git clone https://github.com/dondontim/setup.git && cd setup && bash initial_server_setup.sh
 #cd && git clone https://github.com/dondontim/ubuntu_mail_server && cd ubuntu_mail_server
 
 # The set -e option instructs bash to immediately exit if any command
@@ -117,7 +117,7 @@ main_1
 #    Ref: https://www.linuxbabe.com/mail-server/secure-email-server-ubuntu-postfix-dovecot
 
 source "${LIB_DIR}/2.sh"
-main_2
+#main_2
 
 
 
