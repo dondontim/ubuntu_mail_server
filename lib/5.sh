@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #
-is_debug_on && printf "\n[%s]\n" "${BASH_SOURCE[0]}"
+is_debug_on && printf "\n\n[%s]\n\n" "${BASH_SOURCE[0]}"
 
 
 #######################################

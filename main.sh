@@ -30,6 +30,8 @@ LOG_FILE="/root/ubuntu_mail_server.log"
 # An apex domain is configured with an A , ALIAS , or ANAME record through your DNS provider.
 APEX_DOMAIN='justeuro.eu'
 
+# DEFAULT IP FOR HOSTNAME
+# IP="127.0.0.1"
 command_exists 'dig' || apt_install dnsutils
 IP="$(dig +short myip.opendns.com @resolver1.opendns.com)"
 

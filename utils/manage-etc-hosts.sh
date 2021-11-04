@@ -1,13 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Ref: https://gist.github.com/irazasyed/a7b0a079e7727a4315b9
-
-
-
-# DEFAULT IP FOR HOSTNAME
-# IP="127.0.0.1"
-
-
 
 
 #######################################
@@ -23,10 +16,9 @@ function removehost() {
   local HOSTNAME
   # Hostname to remove.
   HOSTNAME="$1"
-  if [ -n "$(grep $HOSTNAME /etc/hosts)" ]
-  then
+  if grep -q "$HOSTNAME" "$ETC_HOSTS"; then
     echo "$HOSTNAME Found in your $ETC_HOSTS, Removing now...";
-    sudo sed -i".bak" "/$HOSTNAME/d" $ETC_HOSTS
+    sudo sed -i".bak" "/$HOSTNAME/d" "$ETC_HOSTS"
   else
     echo "$HOSTNAME was not found in your $ETC_HOSTS";
   fi
@@ -50,17 +42,18 @@ function addhost() {
   HOSTNAME="$1"
   HOSTS_LINE="${IP}\t${HOSTNAME}"
 
-  if [ -n "$(grep $HOSTNAME /etc/hosts)" ]
-    then
-      echo "$HOSTNAME already exists : $(grep $HOSTNAME $ETC_HOSTS)"
+  if grep -q "$HOSTNAME" "$ETC_HOSTS"; then
+      echo "$HOSTNAME already exists : $(grep "$HOSTNAME" "$ETC_HOSTS")"
     else
       echo "Adding $HOSTNAME to your $ETC_HOSTS";
-      # TODO(tim): I think below is overdone
-      sudo -- sh -c -e "echo '${HOSTS_LINE}' >> /etc/hosts";
+      # TODO(tim): I think below is overdone 
+      #sudo -- sh -c -e "echo '${HOSTS_LINE}' >> $ETC_HOSTS";
+      echo -e "$HOSTS_LINE" >> "$ETC_HOSTS";
 
-      if [ -n "$(grep $HOSTNAME /etc/hosts)" ]
-        then
-          echo "$HOSTNAME was added succesfully \n $(grep $HOSTNAME /etc/hosts)";
+      if grep -q "$HOSTNAME" "$ETC_HOSTS"; then
+          printf "%s was added succesfully \n%s\n" \
+            "$HOSTNAME" \
+            "$(grep "$HOSTNAME" "$ETC_HOSTS")";
         else
           echo "Failed to Add ${HOSTNAME}, Try again!";
       fi

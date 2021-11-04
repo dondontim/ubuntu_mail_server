@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #
-is_debug_on && printf "\n[%s]\n" "${BASH_SOURCE[0]}"
+is_debug_on && printf "\n\n[%s]\n\n" "${BASH_SOURCE[0]}"
 
 
 #######################################
@@ -117,7 +117,7 @@ function set_ipv4_only() {
   if [ "$SET_IPV4_ONLY" = true ]; then
     # If your mail server doesn’t have a public IPv6 address, it’s better 
     # to disable IPv6 in Postfix to prevent unnecessary IPv6 connections.
-    postconf -e "inet_protocols = ipv4"
+    postconf -e inet_protocols='ipv4'
   fi
 }
 
@@ -128,12 +128,17 @@ function set_ipv4_only() {
 #######################################
 function main_1() {
 
+  # TODO(tim): apt_update_and_upgrade is enough cuz autoclean should be in initial_server_setup.sh
   apt_update_and_upgrade_and_autoremove_and_autoclean
 
   change_hostname
 
   ### Set Up DNS Records for Your Mail Server
   # Do it manually in here!
+
+  # TODO(tim): after this whole tutorial create email aliases before installing postfix
+  # In original it was after set_postfix_hostname before set_ipv4_only
+  create_email_alias
 
   installing_postfix
 
@@ -143,7 +148,6 @@ function main_1() {
   set_postfix_size_limits
   set_postfix_hostname
 
-  create_email_alias
 
   set_ipv4_only
 
