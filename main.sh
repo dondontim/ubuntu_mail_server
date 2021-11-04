@@ -2,6 +2,9 @@
 #
 #
 
+#sudo apt-get update -y && sudo apt-get upgrade -y && apt-get install -y git curl && git clone https://github.com/dondontim/setup.git && cd setup
+#cd && git clone https://github.com/dondontim/ubuntu_mail_server && cd ubuntu_mail_server
+
 # The set -e option instructs bash to immediately exit if any command
 # has a non-zero exit status. By default, bash does not do this
 set -e 
@@ -18,8 +21,8 @@ script_requires_root_to_run
 
 
 
-DEBUG='' # @boolean lowercase
-LOG_FILE="/root/initial_server_setup.log"
+DEBUG=true # @boolean lowercase
+LOG_FILE="/root/ubuntu_mail_server.log"
 
 # An apex domain - domain that does not contain a subdomain, such as example.com
 # Apex domains are also known as base, bare, naked, root apex, or zone apex domains.
@@ -28,11 +31,6 @@ APEX_DOMAIN='justeuro.eu'
 
 command_exists 'dig' || apt_install dnsutils
 IP="$(dig +short myip.opendns.com @resolver1.opendns.com)"
-
-
-
-
-
 
 
 
@@ -87,9 +85,16 @@ ETC_HOSTS='/etc/hosts'
 # PATH TO YOUR ALIASES FILE
 ETC_ALIASES'/etc/aliases'
 
+POSTMASTER_ALIAS_USERNAME='tim'
+
 
 # TODO(tim): move variables logicaly to their sections
 
+
+# ${BASH_SOURCE[0]}
+# if file2 (sourced) is in a different directory then:
+#  $(basename ${BASH_SOURCE[0]}) seems to work better to get the filename only. 
+# To get the directory only use "$( cd "$(dirname "$BASH_SOURCE")" ; pwd -P )"
 
 
 ################################################################################
@@ -100,14 +105,19 @@ ETC_ALIASES'/etc/aliases'
 
 source "${LIB_DIR}/1.sh"
 main_1
+
+# You can send plain text emails and read incoming emails using the command line.
+
 # TODO(tim): Append $APEX_DOMAIN to 'mydestination = ' to be able to send emails 
 # from inside server e.g. from root@justeuro.eu to tim@justeuro.eu
+
 
 
 # 2. Install Dovecot IMAP server on Ubuntu & Enable TLS Encryption
 #    Ref: https://www.linuxbabe.com/mail-server/secure-email-server-ubuntu-postfix-dovecot
 
 source "${LIB_DIR}/2.sh"
+main_2
 
 
 
