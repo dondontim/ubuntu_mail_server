@@ -186,11 +186,3 @@ function running_interactively() {
 }
 
 
-
-{ # try
-  echo "Searching: $url"
-  open_command "$url"
-} || { # catch
-  echo "Unrecognized search term!"
-  echo "url = $url"
-}

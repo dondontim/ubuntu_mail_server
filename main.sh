@@ -4,6 +4,7 @@
 
 #sudo apt-get update -y && sudo apt-get upgrade -y && apt-get install -y git curl && git clone https://github.com/dondontim/setup.git && cd setup && bash initial_server_setup.sh
 #cd && git clone https://github.com/dondontim/ubuntu_mail_server && cd ubuntu_mail_server
+#git clone https://github.com/dondontim/ubuntu_mail_server && cd ubuntu_mail_server
 
 # The set -e option instructs bash to immediately exit if any command
 # has a non-zero exit status. By default, bash does not do this
@@ -83,7 +84,7 @@ SET_IPV4_ONLY=true
 # PATH TO YOUR HOSTS FILE
 ETC_HOSTS='/etc/hosts'
 # PATH TO YOUR ALIASES FILE
-ETC_ALIASES'/etc/aliases'
+ETC_ALIASES='/etc/aliases'
 
 POSTMASTER_ALIAS_USERNAME='tim'
 
@@ -116,7 +117,7 @@ main_1
 # 2. Install Dovecot IMAP server on Ubuntu & Enable TLS Encryption
 #    Ref: https://www.linuxbabe.com/mail-server/secure-email-server-ubuntu-postfix-dovecot
 
-source "${LIB_DIR}/2.sh"
+#source "${LIB_DIR}/2.sh"
 #main_2
 
 
