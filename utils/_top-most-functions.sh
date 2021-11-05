@@ -186,3 +186,30 @@ function running_interactively() {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+function using_pop3_to_fetch_emails() {
+  if [ "$USING_POP3_TO_FETCH_EMAILS" = true ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+function escape_all_forward_slashes() {
+  local STRING
+  STRING="$1"
+  # sed allows to use almost any character as a separator instead of: /
+  # Below replaces / with \/ (escapes forward slashes)
+  echo "$STRING" | sed 's;/;\\/;g'
+}

@@ -37,12 +37,12 @@ function installing_postfix() {
     :
   else
     if is_debug_on; then
-      echo "[debconf-set-selections]"
+      printf "\n[debconf-set-selections]\n\n"
       # Taken from: https://serverfault.com/a/144010
-      debconf-set-selections -v <<< "postfix postfix/main_mailer_type string '${POSTFIX_main_mailer_type}'"
+      debconf-set-selections -v <<< "postfix postfix/main_mailer_type string ${POSTFIX_main_mailer_type}"
       debconf-set-selections -v <<< "postfix postfix/mailname string $POSTFIX_mailname"
     else
-      debconf-set-selections <<< "postfix postfix/main_mailer_type string '${POSTFIX_main_mailer_type}'"
+      debconf-set-selections <<< "postfix postfix/main_mailer_type string ${POSTFIX_main_mailer_type}"
       debconf-set-selections <<< "postfix postfix/mailname string $POSTFIX_mailname"
     fi
   fi
@@ -71,14 +71,14 @@ function set_postfix_size_limits() {
 # Setting the Postfix Hostname.
 # Globals: 
 #   HOSTNAME_TO_SET
-#   POSTFIX_MAIN_CONFIG_FILE
+#   POSTFIX_MAIN_CF
 #######################################
 function set_postfix_hostname() {
   # By default, Postfix SMTP server uses the OS’s hostname. 
   # However, the OS hostname might change, so it’s a good practice to set
   # the hostname directly in Postfix configuration file.
 
-  grep -Eq "^myhostname ?= ?${HOSTNAME_TO_SET}" "$POSTFIX_MAIN_CONFIG_FILE" || {
+  grep -Eq "^myhostname ?= ?${HOSTNAME_TO_SET}" "$POSTFIX_MAIN_CF" || {
     postconf -e myhostname="$HOSTNAME_TO_SET"
   }
 }
@@ -160,6 +160,6 @@ function main_1() {
   # and the system is going to upgrade Postfix, you might be prompted to choose
   # a configuration type for Postfix again. This time you should choose:
   # 'No configuration' to leave your current configuration file untouched.
-  debconf-set-selections <<< "postfix postfix/main_mailer_type string 'No configuration'"
+  debconf-set-selections <<< "postfix postfix/main_mailer_type string No configuration"
   apt_update_and_upgrade
 }

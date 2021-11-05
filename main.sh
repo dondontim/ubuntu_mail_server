@@ -76,7 +76,8 @@ fi
 
 
 
-POSTFIX_MAIN_CONFIG_FILE='/etc/postfix/main.cf'
+POSTFIX_MAIN_CF='/etc/postfix/main.cf'
+POSTFIX_MASTER_CF='/etc/postfix/master.cf'
 
 SET_IPV4_ONLY=true
 
@@ -100,6 +101,15 @@ POSTMASTER_ALIAS_USERNAME='tim'
 # To get the directory only use "$( cd "$(dirname "$BASH_SOURCE")" ; pwd -P )"
 
 
+# BEFORE YOU SHOULD INSTALL WEB SERVER CUZ WE WILL NEED TLS CERTIFICATE AND THIS WAY IT IS EASIER
+
+
+
+
+# postconf -# smtp_tls_CApath # Comment out an entry
+# postconf -X smtp_tls_CApath # Remove      an entry
+
+
 ################################################################################
 
 
@@ -119,8 +129,16 @@ main_1
 # 2. Install Dovecot IMAP server on Ubuntu & Enable TLS Encryption
 #    Ref: https://www.linuxbabe.com/mail-server/secure-email-server-ubuntu-postfix-dovecot
 
+USING_POP3_TO_FETCH_EMAILS=true
+DOVECOT_CONF='/etc/dovecot/dovecot.conf'
+
+# Mailbox location config file
+DOVECOT_MAILBOX_LOCATIONS_AND_NAMESPACES_CONF_FILE='/etc/dovecot/conf.d/10-mail.conf'
+
 #source "${LIB_DIR}/2.sh"
 #main_2
+
+## Securing Email Server Traffic with TLS Certificate
 
 
 
