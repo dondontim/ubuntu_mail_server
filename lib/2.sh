@@ -41,8 +41,14 @@ EOF
   # Microsoft Outlook mail client only supports submission over port 465. 
   # If you are going to use Microsoft Outlook, then you also need to enable
   # submission service on port 465 by replacing the following lines in the file:
-  #  -o syslog_name=postfix/smtps
-  #  -o smtpd_tls_wrappermode=yes
+  # smtps     inet  n       -       y       -       -       smtpd
+  # -o syslog_name=postfix/smtps
+  # -o smtpd_tls_wrappermode=yes
+  # -o smtpd_sasl_auth_enable=yes
+  # -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
+  # -o smtpd_recipient_restrictions=permit_mynetworks,permit_sasl_authenticated,reject
+  # -o smtpd_sasl_type=dovecot
+  # -o smtpd_sasl_path=private/auth
 
   # Hint: The SMTP protocol is used when an email client submits emails to an SMTP server.
 }

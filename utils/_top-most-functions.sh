@@ -92,7 +92,7 @@ function apt_update_and_upgrade() {
 
 function apt_update_and_upgrade_and_autoremove_and_autoclean() {
   sudo apt-get update -y && sudo apt-get upgrade -y && apt-get autoremove -y && apt-get autoclean -y
-  sudo apt-get update -y && sudo apt-get upgrade -y
+  #sudo apt-get update -y && sudo apt-get upgrade -y
 }
 
 function press_anything_to_continue() {
