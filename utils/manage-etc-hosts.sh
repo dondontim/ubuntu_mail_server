@@ -43,19 +43,20 @@ function addhost() {
   HOSTS_LINE="${IP}\t${HOSTNAME}"
 
   if grep -q "$HOSTNAME" "$ETC_HOSTS"; then
-      echo "$HOSTNAME already exists : $(grep "$HOSTNAME" "$ETC_HOSTS")"
-    else
-      echo "Adding $HOSTNAME to your $ETC_HOSTS";
-      # TODO(tim): I think below is overdone 
-      #sudo -- sh -c -e "echo '${HOSTS_LINE}' >> $ETC_HOSTS";
-      echo -e "$HOSTS_LINE" >> "$ETC_HOSTS";
+    echo "$HOSTNAME already exists : $(grep "$HOSTNAME" "$ETC_HOSTS")"
+  else
+    echo "Adding $HOSTNAME to your $ETC_HOSTS";
+    # TODO(tim): I think below is overdone 
+    #sudo -- sh -c -e "echo '${HOSTS_LINE}' >> $ETC_HOSTS";
+    echo -e "$HOSTS_LINE" >> "$ETC_HOSTS";
 
-      if grep -q "$HOSTNAME" "$ETC_HOSTS"; then
-          printf "%s was added succesfully \n%s\n" \
-            "$HOSTNAME" \
-            "$(grep "$HOSTNAME" "$ETC_HOSTS")";
-        else
-          echo "Failed to Add ${HOSTNAME}, Try again!";
-      fi
+    if grep -q "$HOSTNAME" "$ETC_HOSTS"; then
+        printf "%s was added succesfully \n%s\n" \
+          "$HOSTNAME" \
+          "$(grep "$HOSTNAME" "$ETC_HOSTS")";
+      else
+        printf 'Failed to Add %s, Try again!' \
+          "$HOSTNAME";
+    fi
   fi
 }

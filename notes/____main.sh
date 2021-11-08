@@ -20,3 +20,15 @@ journalctl -xe
 # https://support.microsoft.com/en-us/supportrequestform/8ad563e3-288e-2a61-8122-3ba03d6b8d75
 # After that, 
 # your email will be accepted by outlook/hotmail, but may still be labeled as spam.
+
+
+
+USING_POP3_TO_FETCH_EMAILS='true'
+
+function using_pop3_to_fetch_emails() {
+  if [ "$USING_POP3_TO_FETCH_EMAILS" = true ]; then
+    return 0
+  else
+    return 1
+  fi
+}

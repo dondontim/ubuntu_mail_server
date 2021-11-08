@@ -23,10 +23,10 @@ bash main.sh # 1.sh
 # 2
 ################################################################################
 
-sudo ufw allow 80,443,587,465,143,993/tcp
+ufw allow 80,443,587,465,143,993/tcp
 
 # POP: If you use POP3 to fetch emails (For Gmail), then also open port 110 and 995.
-sudo ufw allow 110,995/tcp
+ufw allow 110,995/tcp
 
 
 # copy all_config_postfix
