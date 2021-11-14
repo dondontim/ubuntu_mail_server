@@ -1,3 +1,18 @@
+# Postfixadmin for normal users
+https://postfixadmin.justeuro.eu/users/login.php
+
+# Store rejected messages
+I use postfix with amavisd-new which has the ability to quarantine messages.
+
+
+
+
+
+
+
+################################################################################
+
+
 # Logs
 grep postfix /var/log/syslog
 /var/log/mail.log
@@ -157,3 +172,15 @@ postconf -X smtp_tls_CApath # Remove      an entry
 -rw-r--r-- 1 tim  tim     39 Nov  7 18:17 restart.conf
 -rw-r--r-- 1 root root    48 Nov  7 18:23 signing.table
 -rw-r--r-- 1 root root    35 Nov  7 18:23 trusted.hosts
+
+
+
+
+
+
+
+
+
+
+
+

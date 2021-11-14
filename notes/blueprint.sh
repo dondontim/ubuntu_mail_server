@@ -4,6 +4,9 @@ sudo doveadm user '*'
 # Check for open ports
 nmap mail.your-domain.com
 
+function nnn() {
+  ln "$1" /root/all_files/ 
+}
 
 ################################################################################
 ################################################################################
@@ -20,8 +23,17 @@ bash main.sh # 1.sh
 
 
 ################################################################################
-# 2
+# 1, 2
 ################################################################################
+
+# Na razie nie
+#change hostname
+#install postfix
+#ufw allow 25/tcp
+
+
+
+
 
 ufw allow 80,443,587,465,143,993/tcp
 
@@ -300,3 +312,51 @@ cp /etc/policyd-rate-limit.yaml
 
 systemctl restart postfix policyd-rate-limit
 
+
+
+################################################################################
+# 7 Effective Tips for Blocking Email Spam with Postfix SMTP Server
+# https://www.linuxbabe.com/mail-server/block-email-spam-postfix
+################################################################################
+
+
+
+### BE SURE TO CHECK IT ONCE AGAIN
+
+
+cp /etc/postfix/helo_access
+
+# Then run the following command to create the /etc/postfix/helo_access.db file.
+postmap /etc/postfix/helo_access
+
+
+# Enable Greylisting in Postfix
+apt install postgrey
+
+# Once it’s installed, start it with systemctl.
+systemctl start postgrey
+# Enable auto-start at boot time.
+systemctl enable postgrey
+
+# On Debian and Ubuntu, it listens on TCP port 10023 on localhost (both IPv4 and IPv6).
+sudo netstat -lnpt | grep postgrey
+
+
+# Note: You can also see postgrey logs with this command: 
+sudo journalctl -u postgrey.
+
+
+
+
+
+
+cp /etc/postfix/rbl_override
+postmap /etc/postfix/rbl_override
+
+
+
+apt install mutt
+
+
+
+apt install fail2ban
