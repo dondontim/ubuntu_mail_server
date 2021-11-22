@@ -365,7 +365,7 @@ apt install fail2ban
 
 
 ################################################################################
-# 9
+# 9.
 ################################################################################
 
 apt install postfix-pcre
@@ -431,3 +431,91 @@ cp /var/vmail/justeuro.eu/admin/spamassassin/user_pref
 cp /etc/postfix/smtp_header_checks
 postmap /etc/postfix/smtp_header_checks
 systemctl reload postfix
+
+
+################################################################################
+# 10.
+################################################################################
+
+
+apt install amavisd-new -y
+
+# Enable auto-start at boot time.
+systemctl enable amavis
+
+# Check logs of amavis
+journalctl -eu amavis 
+
+# Viruses are commonly spread as attachments to email messages. 
+# Install the following packages for Amavis to extract and scan archive files 
+# in email messages such as .7z, .cab, .doc, .exe, .iso, .jar, and .rar files.
+apt install arj bzip2 cabextract cpio rpm2cpio file gzip lhasa nomarch pax p7zip-full unzip zip lrzip lzip liblz4-tool lzop unrar-free
+apt-get install unrar-free # this is replacement for original: rar unrar packages names
+
+
+# NOTE: that if your server doesn’t use a fully-qualified domain name (FQDN) 
+# as the hostname, Amavis might fail to start. And the OS hostname might change,
+# so it’s recommended to set a valid hostname directly in the Amavis configuration file.
+# IN: /etc/amavis/conf.d/05-node_id
+cp /etc/amavis/conf.d/05-node_id
+systemctl restart amavis
+
+
+
+### Integrate Amavis with ClamAV
+apt install clamav clamav-daemon
+# There will be two systemd services installed by ClamAV:
+#   clamav-daemon.service: the Clam AntiVirus userspace daemon
+#   clamav-freshclam.service: the ClamAV virus database updater
+
+# Check journal/log
+journalctl -eu clamav-freshclam
+
+
+# it will fail main.cvd and daily.cvd (ClamAV Virus Database) were not downloaded yet when it starts. 
+systemctl status clamav-daemon 
+sudo systemctl restart clamav-daemon # so restart it
+
+### BTW: If your mail server doesn’t have enough RAM left, the service will fail.
+### just this: systemctl status clamav-daemon.service uses on my server 1.1GB!!! 
+
+# The clamav-freshclam.service will check ClamAV virus database updates once per hour.
+
+# Now we need to turn on virus-checking in Amavis.
+cp /etc/amavis/conf.d/15-content_filter_mode
+
+
+# There are lots of antivirus scanners in the /etc/amavis/conf.d/15-av_scanners file.
+# ClamAV is the default. Amavis will call ClamAV via the /var/run/clamav/clamd.ctl Unix socket. 
+# We need to add user clamav to the amavis group.
+adduser clamav amavis
+systemctl restart amavis clamav-daemon
+
+# Test if received email have:
+# ex. header: X-Virus-Scanned: Debian amavisd-new at justeuro.eu
+
+
+
+### Use A Dedicated Port for Email Submissions
+# NOTE: Custom settings should be added between the use strict; and 1; line.
+
+cp /etc/amavis/conf.d/50-user
+systemctl restart amavis
+
+
+# If you have OpenDKIM running on your mail server, then you can disable DKIM verification in Amavis.
+cp /etc/amavis/conf.d/21-ubuntu_defaults
+systemctl restart amavis
+
+
+### Improve amavis performance
+
+# After running you should see that there are 4 Amavis processes
+#amavisd-nanny #already done in main.cf and master.cf
+
+
+
+
+################################################################################
+# 12. (i do not do 11 (VPN))
+################################################################################
