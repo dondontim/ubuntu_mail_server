@@ -229,6 +229,48 @@ for d in "${DIRS[@]}"; do
   cp -r "$d" "/root/backup_nr4/${NAME}"
 done
 
+
+-rw-r--r--  1 root root   195 Nov 14 21:05 %etc%aliases
+-rw-------  1 root root  3000 Nov 14 21:05 %etc%dbconfig-common%postfixadmin.conf
+-rw-r--r--  1 root root   753 Nov 14 21:05 %etc%default%opendkim
+-rw-r--r--  1 root root   510 Nov 14 21:05 %etc%default%postgrey
+drwxr-xr-x  4 root root  4096 Nov 14 21:06 %etc%dovecot%
+-rw-r--r--  1 root root  5729 Nov 14 21:05 %etc%dovecot%conf.d%10-auth.conf
+-rw-r--r--  1 root root 18047 Nov 14 21:05 %etc%dovecot%conf.d%10-mail.conf
+-rw-r--r--  1 root root  3920 Nov 14 21:05 %etc%dovecot%conf.d%10-master.conf
+-rw-r--r--  1 root root  3631 Nov 14 21:05 %etc%dovecot%conf.d%10-ssl.conf
+-rw-r--r--  1 root root  3169 Nov 14 21:05 %etc%dovecot%conf.d%15-mailboxes.conf
+-rw-r-----  1 root root  6216 Nov 14 21:05 %etc%dovecot%dovecot-sql.conf.ext
+-rw-r--r--  1 root root  4428 Nov 14 21:05 %etc%dovecot%dovecot.conf
+drwxr-xr-x  6 root root  4096 Nov 14 21:06 %etc%fail2ban%
+-rw-r--r--  1 root root    86 Nov 14 21:05 %etc%fail2ban%filter.d%postfix-flood-attack.conf
+-rw-r--r--  1 root root   404 Nov 14 21:05 %etc%fail2ban%jail.local
+-rw-r--r--  1 root root    17 Nov 14 21:05 %etc%hostname
+-rw-r--r--  1 root root   204 Nov 14 21:05 %etc%hosts
+drwxr-xr-x  9 root root  4096 Nov 14 22:12 %etc%letsencrypt%
+drwxr-xr-x  8 root root  4096 Nov 14 22:12 %etc%nginx%
+-rw-r--r--  1 root root  2021 Nov 14 21:05 %etc%nginx%conf.d%postfixadmin.conf
+drwxr-xr-x  3 root root  4096 Nov 14 22:12 %etc%opendkim%
+-rw-r--r--  1 root root  3405 Nov 14 21:05 %etc%opendkim.conf
+-rw-r-----  1 root root  4172 Nov 14 21:05 %etc%policyd-rate-limit.yaml
+drwxr-xr-x  6 root root  4096 Nov 14 22:12 %etc%postfix%
+-rw-r--r--  1 root root    84 Nov 14 21:05 %etc%postfix%helo_access
+-rw-r--r--  1 root root  7133 Nov 14 21:05 %etc%postfix%main.cf
+-rw-r--r--  1 root root  7194 Nov 14 21:05 %etc%postfix%master.cf
+-rw-r--r--  1 root root    35 Nov 14 21:05 %etc%postfix%my_custom_header
+-rw-r--r--  1 root root   153 Nov 14 21:05 %etc%postfix%rbl_override
+drwxr-xr-x  2 root root  4096 Nov 14 21:06 %etc%postfix%sql%
+-rw-r-----  1 root root   531 Nov 14 21:05 %etc%postfixadmin%dbconfig.inc.php
+drwxr-xr-x  2 root root  4096 Nov 14 21:06 %etc%postgrey%
+-rw-r--r--  1 root root  9278 Nov 14 21:05 %etc%postgrey%whitelist_clients
+drwxr-xr-x  2 root root  4096 Nov 14 22:12 %etc%systemd%system%dovecot.service.d%
+drwxr-xr-x 10 root root  4096 Nov 14 21:06 %usr%share%postfixadmin%
+-rw-r--r--  1 root root   396 Nov 14 21:05 %usr%share%postfixadmin%config.local.php
+drwxr-xr-x  2 root root  4096 Nov 14 22:12 %usr%share%postfixadmin%templates_c%
+-rw-------  1 root root  2243 Nov 14 21:05 %var%spool%cron%crontabs%root
+drwxr-xr-x  3 root root  4096 Nov 14 21:06 %var%vmail%
+
+
 ################################################################################
 ################################################################################
 ################################################################################
@@ -238,19 +280,112 @@ done
 # Trying 9.
 ################################################################################
 
+/etc/postfix/header_checks
 
 
+/etc/postfix/body_checks
 
 
+/etc/default/spamass-milter
 
 
+/etc/default/spamassassin
+/etc/spamassassin/local.cf
 
 
+# btw Think of the whole /usr/share/spamassassin/ dir
+
+/etc/dovecot/conf.d/15-lda.conf
+/etc/dovecot/conf.d/20-lmtp.conf
+/etc/dovecot/conf.d/90-sieve.conf
+/var/mail/SpamToJunk.sieve
+
+# user specific - seems not working for 17 Nov
+/var/vmail/justeuro.eu/admin/spamassassin/user_pref
+
+# Deleting Email Headers For Outgoing Emails
+/etc/postfix/smtp_header_checks
 
 
+###############
+
+# 38
+FILES=(
+  "/etc/hostname"
+  "/etc/hosts"
+  "/etc/aliases"
+  "/etc/postfix/main.cf"
+  "/etc/postfix/master.cf"
+  "/etc/dovecot/dovecot.conf"
+  "/etc/dovecot/conf.d/10-mail.conf"
+  "/etc/dovecot/conf.d/10-master.conf"
+  "/etc/dovecot/conf.d/10-auth.conf"
+  "/etc/dovecot/conf.d/10-ssl.conf"
+  "/etc/dovecot/conf.d/15-mailboxes.conf"
+  "/etc/dbconfig-common/postfixadmin.conf"
+  "/etc/postfixadmin/dbconfig.inc.php"
+  "/etc/nginx/conf.d/postfixadmin.conf"
+  "/usr/share/postfixadmin/config.local.php"
+  "/etc/dovecot/dovecot-sql.conf.ext"
+  "/var/spool/cron/crontabs/root"
+  "/etc/opendkim.conf"
+  "/etc/default/opendkim"
+  "/etc/policyd-rate-limit.yaml"
+  "/etc/postfix/my_custom_header"
+  "/etc/postfix/helo_access"
+  "/etc/postgrey/whitelist_clients"
+  "/etc/default/postgrey"
+  "/etc/postfix/rbl_override"
+  "/etc/fail2ban/jail.local"
+  "/etc/fail2ban/filter.d/postfix-flood-attack.conf"
+  "/etc/postfix/header_checks"
+  "/etc/postfix/body_checks"
+  "/etc/default/spamass-milter"
+  "/etc/default/spamassassin"
+  "/etc/spamassassin/local.cf"
+  "/etc/dovecot/conf.d/15-lda.conf"
+  "/etc/dovecot/conf.d/20-lmtp.conf"
+  "/etc/dovecot/conf.d/90-sieve.conf"
+  "/var/mail/SpamToJunk.sieve"
+  "/var/vmail/justeuro.eu/admin/spamassassin/user_pref"
+  "/etc/postfix/smtp_header_checks"
+)
+for f in "${FILES[@]}"; do
+  NAME="$(echo "$f" | sed "s;/;%;g")"
+  cp "$f" "/root/backup_nr4/${NAME}"
+done
+# 13       cuz additionaly added:
+# /usr/share/postfixadmin/
+# /etc/dovecot/
+# /etc/postgrey/
+# /etc/postfix/
+# /etc/fail2ban/
+# 
+# /etc/spamassassin/ # added in 9.
+DIRS=(
+  "/etc/opendkim/"
+  "/etc/systemd/system/dovecot.service.d/"
+  "/usr/share/postfixadmin/templates_c/"
+  "/etc/postfix/sql/"
+  "/var/vmail/"
+  "/etc/letsencrypt/"
+  "/etc/nginx/"
+  "/usr/share/postfixadmin/"
+  "/etc/dovecot/"
+  "/etc/postgrey/"
+  "/etc/postfix/"
+  "/etc/fail2ban/"
+  "/etc/spamassassin/"
+)
+for d in "${DIRS[@]}"; do
+  NAME="$(echo "$d" | sed "s;/;%;g")"
+  cp -r "$d" "/root/backup_nr4/${NAME}"
+done
 
 
-
+################################################################################
+# Trying 10.
+################################################################################
 
 
 
@@ -281,3 +416,5 @@ done
 
 git clone https://github.com/dondontim/tmp_backup_nr2.git
 "/home/tim/backup_nr3/"
+
+ls -1 | wc -l

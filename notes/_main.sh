@@ -1,12 +1,28 @@
-# Postfixadmin for normal users
+### Postfixadmin paths
+#
+# Postfixadmin for normal users (change password or set forwarding)
 https://postfixadmin.justeuro.eu/users/login.php
 
+# Postfixadmin for root (managing mailboxes)
+https://postfixadmin.justeuro.eu/login.php
+
+# Postfixadmin to change root credentials
+https://postfixadmin.justeuro.eu/setup.php
+
+
+
+
+
+
+### Amavis
 # Store rejected messages
 I use postfix with amavisd-new which has the ability to quarantine messages.
 
 
 
 
+### checking spamassasin config files
+spamassassin --lint
 
 
 

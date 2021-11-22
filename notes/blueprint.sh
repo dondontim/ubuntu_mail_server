@@ -360,3 +360,74 @@ apt install mutt
 
 
 apt install fail2ban
+
+
+
+
+################################################################################
+# 9
+################################################################################
+
+apt install postfix-pcre
+
+# header_checks
+cp /etc/postfix/header_checks
+postmap /etc/postfix/header_checks # Kluci sie z custom_header in main.cf
+
+# body_checks
+cp /etc/postfix/body_checks
+postmap /etc/postfix/body_checks
+
+
+# Install SpamAssassin
+apt install spamassassin spamc
+
+systemctl enable spamassassin
+systemctl start spamassassin
+
+# Integrate SpamAssassin with Postfix SMTP Server as a Milter
+apt install spamass-milter
+
+
+
+cp /etc/default/spamass-milter
+
+
+
+
+systemctl restart postfix spamass-milter
+
+
+
+cp /etc/default/spamassassin
+cp /etc/spamassassin/local.cf # local config  
+
+systemctl restart spamassassin
+
+
+# Move Spam into the Junk Folder
+
+# This package installs two configuration files under 
+# /etc/dovecot/conf.d/ directory: 90-sieve.conf and 90-sieve-extprograms.conf.
+apt install dovecot-sieve
+
+
+cp /etc/dovecot/conf.d/15-lda.conf
+cp /etc/dovecot/conf.d/20-lmtp.conf
+cp /etc/dovecot/conf.d/90-sieve.conf
+cp /var/mail/SpamToJunk.sieve
+
+# We can compile this script, so it will run faster.
+sievec /var/mail/SpamToJunk.sieve
+
+# Now there is a binary file saved as /var/mail/SpamToJunk.svbin. 
+# Finally, restart dovecot for the changes to take effect.
+systemctl restart dovecot
+
+# user specific - seems not working for 17 Nov
+cp /var/vmail/justeuro.eu/admin/spamassassin/user_pref
+
+# Deleting Email Headers For Outgoing Emails
+cp /etc/postfix/smtp_header_checks
+postmap /etc/postfix/smtp_header_checks
+systemctl reload postfix
