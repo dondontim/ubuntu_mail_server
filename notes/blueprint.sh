@@ -519,3 +519,44 @@ systemctl restart amavis
 ################################################################################
 # 12. (i do not do 11 (VPN))
 ################################################################################
+
+cp /etc/postfix/postscreen_access.cidr
+systemctl restart postfix
+
+# Note: Postscreen listens on port 25 only, 
+# so authenticated users from port 587 or 465 won’t be affected by Postscreen.
+
+### Step 2: Pregreet Test
+# 
+# There is a pregreet test in Postscreen to detect spam. 
+# As you may already know, in SMTP protocol, the receiving SMTP server should always
+# declare its hostname before the sending SMTP server does so. 
+# Some spammers violate this rule and declare their hostnames before the receiving SMTP server does.
+
+
+# The sender will try the first mail server (with priority 0). 
+# If mail.yourdomain.com rejects email by greylisting, 
+# then the sender would immediately try the second mail server (with priority 5).
+# Instead of waiting to retry to same mx record (if would be only one)
+
+
+## Using Postwhite
+cd /usr/local/bin/
+apt install git
+# Clone the SPF-Tools and Postwhite Github repository.
+git clone https://github.com/spf-tools/spf-tools.git
+git clone https://github.com/stevejenkins/postwhite.git
+
+# Copy the postwhite.conf file to /etc/.
+sudo cp /usr/local/bin/postwhite/postwhite.conf /etc/
+
+# Run Postwhite.
+sudo /usr/local/bin/postwhite/postwhite
+# The whitelist will be save as /etc/postfix/postscreen_spf_whitelist.cidr.
+
+
+
+################################################################################
+# SETTING UP LOCAL DNS RESOLVER
+################################################################################
+
