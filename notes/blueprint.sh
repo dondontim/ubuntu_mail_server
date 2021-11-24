@@ -560,3 +560,88 @@ sudo /usr/local/bin/postwhite/postwhite
 # SETTING UP LOCAL DNS RESOLVER
 ################################################################################
 
+
+########### Unbound ##############
+#
+# Ref: https://www.linuxbabe.com/ubuntu/set-up-unbound-dns-resolver-on-ubuntu-20-04-server
+
+###### Helper functions
+
+# Returns 0 if service is active and non 0 if not
+function is_service_running() {
+  systemctl is-active --quiet "$@"
+}
+###### END Helper functions
+
+
+
+### Install Unbound DNS Resolver on Ubuntu 20.04
+apt update
+apt install unbound
+
+# If it’s not running, then start it with:
+systemctl start unbound
+# And enable auto-start at boot time:
+systemctl enable unbound
+
+
+
+# If you installed BIND9 resolver before, 
+# then you need to run the following command to stop and disable it, 
+# so Unbound can listen to the UDP port 53. 
+# By default, Unbound listens on 127.0.0.1:53 and [::1]:53
+systemctl disable named --now
+
+
+cp /etc/unbound/unbound.conf
+
+# By default, Ubuntu runs the systemd-resolved stub resolver which listens on 127.0.0.53:53. 
+# You need to stop it, so unbound can bind to 0.0.0.0:53.
+systemctl disable systemd-resolved --now
+
+systemctl restart unbound
+
+# If you have UFW firewall running on the Unbound server, 
+# then you need to open port 53 to allow LAN clients to send DNS queries.
+
+# This will open TCP and UDP port 53 to the private network (if you have VPN setup) 10.0.0.0/8.
+#ufw allow in from 10.0.0.0/8 to any port 53 
+ufw allow in from 190.92.134.0/24 to any port 53
+
+
+### Setting the Default DNS Resolver on Ubuntu 20.04 Server
+
+# We need to make Ubuntu 20.04 server use 127.0.0.1 as DNS resolver, 
+# so unbound will answer DNS queries. The unbound package on Ubuntu ships with
+# a systemd service unbound-resolvconf.service that is supposed to 
+# help us accomplish this. However, I found it won’t work.
+#
+# Instead, create a custom unbound-resolvconf.service
+cp /etc/systemd/system/unbound-resolvconf.service
+
+
+# Reload systemd
+systemctl daemon-reload
+# Make sure your system has the resolvconf binary.
+apt-get install openresolv -y
+# Next, restart this service.
+systemctl restart unbound-resolvconf.service
+
+if is_service_running "unbound"; then
+  if grep -q 'nameserver 127.0.0.1' /etc/resolv.conf; then
+    echo 'success setting up unbound as local DNS resolver'
+  else
+    echo 'fail setting up unbound as local DNS resolver'
+  fi
+else 
+  echo '[error]: unbound not running'
+fi
+
+###################### END UNBOUND LOCAL DNS RESOLVER
+
+
+
+
+################################################################################
+# Setting up Roundcube webmail
+################################################################################
