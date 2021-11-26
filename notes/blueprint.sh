@@ -351,6 +351,9 @@ sudo journalctl -u postgrey.
 
 
 cp /etc/postfix/rbl_override
+# Hash the blacklist
+# the file must be converted to a database that Postfix can read. 
+# This must be done every time rbl_override is updated.
 postmap /etc/postfix/rbl_override
 
 
@@ -640,8 +643,15 @@ fi
 ###################### END UNBOUND LOCAL DNS RESOLVER
 
 
+################################################################################
+# Additional commit - before webmail
+################################################################################
+
+cp /etc/mailname
 
 
 ################################################################################
 # Setting up Roundcube webmail
 ################################################################################
+
+
