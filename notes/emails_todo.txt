@@ -1,0 +1,11 @@
+hr@justeuro.eu
+administration@justeuro.eu
+privacy@justeuro.eu
+denis@justeuro.eu
+tim@justeuro.eu
+recruitment@justeuro.eu
+info@justeuro.eu
+
+for i in $( cat users-list.txt ); do pwgen -s -1 15 1 | sed "s/^/$i /"; done
+
+reports@justeuro.eu

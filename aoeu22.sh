@@ -763,3 +763,98 @@ done
 ################################################################################
 # Setting up Roundcube webmail
 ################################################################################
+
+/var/www/justeuro.eu/roundcube/config/config.inc.php
+/var/www/justeuro.eu/roundcube/plugins/password/config.inc.php
+
+/var/vmail/justeuro.eu/tim/sieve/roundcube.sieve
+
+###############
+
+# 49
+FILES=(
+  "/etc/hostname"
+  "/etc/hosts"
+  "/etc/aliases"
+  "/etc/postfix/main.cf"
+  "/etc/postfix/master.cf"
+  "/etc/dovecot/dovecot.conf"
+  "/etc/dovecot/conf.d/10-mail.conf"
+  "/etc/dovecot/conf.d/10-master.conf"
+  "/etc/dovecot/conf.d/10-auth.conf"
+  "/etc/dovecot/conf.d/10-ssl.conf"
+  "/etc/dovecot/conf.d/15-mailboxes.conf"
+  "/etc/dbconfig-common/postfixadmin.conf"
+  "/etc/postfixadmin/dbconfig.inc.php"
+  "/etc/nginx/sites-available/postfixadmin.justeuro.eu"
+  "/usr/share/postfixadmin/config.local.php"
+  "/etc/dovecot/dovecot-sql.conf.ext"
+  "/var/spool/cron/crontabs/root"
+  "/etc/opendkim.conf"
+  "/etc/default/opendkim"
+  "/etc/policyd-rate-limit.yaml"
+  "/etc/postfix/my_custom_header"
+  "/etc/postfix/helo_access"
+  "/etc/postgrey/whitelist_clients"
+  "/etc/default/postgrey"
+  "/etc/postfix/rbl_override"
+  "/etc/fail2ban/jail.local"
+  "/etc/fail2ban/filter.d/postfix-flood-attack.conf"
+  "/etc/postfix/header_checks"
+  "/etc/postfix/body_checks"
+  "/etc/default/spamass-milter"
+  "/etc/default/spamassassin"
+  "/etc/spamassassin/local.cf"
+  "/etc/dovecot/conf.d/15-lda.conf"
+  "/etc/dovecot/conf.d/20-lmtp.conf"
+  "/etc/dovecot/conf.d/90-sieve.conf"
+  "/var/mail/SpamToJunk.sieve"
+  "/var/vmail/justeuro.eu/admin/spamassassin/user_pref"
+  "/etc/postfix/smtp_header_checks"
+  "/etc/amavis/conf.d/05-node_id"
+  "/etc/amavis/conf.d/15-content_filter_mode"
+  "/etc/amavis/conf.d/50-user"
+  "/etc/amavis/conf.d/21-ubuntu_defaults"
+  "/etc/postfix/postscreen_access.cidr"
+  "/etc/unbound/unbound.conf"
+  "/etc/systemd/system/unbound-resolvconf.service"
+  "/etc/mailname"
+  "/var/www/justeuro.eu/roundcube/config/config.inc.php"
+  "/var/www/justeuro.eu/roundcube/plugins/password/config.inc.php"
+  "/var/vmail/justeuro.eu/tim/sieve/roundcube.sieve"
+)
+for f in "${FILES[@]}"; do
+  NAME="$(echo "$f" | sed "s;/;%;g")"
+  cp "$f" "/root/backup_nr4/${NAME}"
+done
+# 15       cuz additionaly added:
+# /usr/share/postfixadmin/
+# /etc/dovecot/
+# /etc/postgrey/
+# /etc/postfix/
+# /etc/fail2ban/
+# 
+# /etc/spamassassin/ # added in 9.
+# /etc/amavis/ # added in 10.
+# /etc/ # added in 12.
+DIRS=(
+  "/etc/opendkim/"
+  "/etc/systemd/system/dovecot.service.d/"
+  "/usr/share/postfixadmin/templates_c/"
+  "/etc/postfix/sql/"
+  "/var/vmail/"
+  "/etc/letsencrypt/"
+  "/etc/nginx/"
+  "/usr/share/postfixadmin/"
+  "/etc/dovecot/"
+  "/etc/postgrey/"
+  "/etc/postfix/"
+  "/etc/fail2ban/"
+  "/etc/spamassassin/"
+  "/etc/amavis/"
+  "/etc/"
+)
+for d in "${DIRS[@]}"; do
+  NAME="$(echo "$d" | sed "s;/;%;g")"
+  cp -r "$d" "/root/backup_nr4/${NAME}"
+done

@@ -32,3 +32,10 @@ function using_pop3_to_fetch_emails() {
     return 1
   fi
 }
+
+
+justeuro.eu
+postfixadmin.justeuro.eu
+roundcube.justeuro.eu
+cdn.justeuro.eu
+hackmeifyoucan.justeuro.eu
