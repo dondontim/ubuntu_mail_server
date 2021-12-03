@@ -105,9 +105,13 @@ function press_anything_to_continue() {
 
 
 
-function check_if_running_as_root() {
-  # TODO(tim): do same as below but return exit code instead
-  :
+function running_as_root() {
+  # Same as below but return exit code instead
+  if [[ $EUID -ne 0 ]]; then
+    return 1
+  else
+    return 0
+  fi
 }
 
 function script_requires_root_to_run() {

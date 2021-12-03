@@ -1,11 +1,132 @@
+for i in $( cat emails_list.txt ); do pwgen -s -1 15 1 | sed "s/^/$i /"; done
+for i in $( cat emails_list.txt ); do pwgen -s -1 --symbols --remove-chars='#`\|' 15 1 | sed "s/^/$i /"; done
+
+
+
+#################### USED ####################
+
+# For contact with client agencies
 hr@justeuro.eu
-administration@justeuro.eu
+# For reaching out to new agencies and administration stuff
+administration@justeuro.eu # all administration mails will be copied here
+administratie@justeuro.eu  # NL specific mail
+
+# Generic Customer Support Email Inbox (For your helpdesk or customer service )
+support@justeuro.eu
+
+# For privacy page (required)
 privacy@justeuro.eu
+# For automatic email sending to candidates
+recruitment@justeuro.eu  # all recruitment mails will be copied here + en/nl
+rekrutacja@justeuro.eu   # Polski
+reclutamento@justeuro.eu # Wloski
+recrutare@justeuro.eu    # Rumunski
+
+# Generic Human Resources Email Inbox (alternatives: careers@)
+jobs@justeuro.eu 
+
+# For collecting reports (ex. DMARC SPF etc)
+reports@justeuro.eu
+
+# for general inquiries or customer service (also popular alternatives: hello@, howdy@, hi@)
+info@justeuro.eu 
+
+# Generic Contact Email Inbox
+contact@justeuro.eu
+
+# For technical administrative purposes
+admin@justeuro.eu
+
+# Personal emails
 denis@justeuro.eu
 tim@justeuro.eu
-recruitment@justeuro.eu
-info@justeuro.eu
 
-for i in $( cat users-list.txt ); do pwgen -s -1 15 1 | sed "s/^/$i /"; done
 
-reports@justeuro.eu
+
+#################### UNUSED ####################
+
+## Personal
+# 
+# Optonaly:
+# * john.sales@domain.com
+# * support.john@domain.com
+# * media.john@domain.com
+# Or with location:
+# * pl.tim@domain.com
+denis.cartin@justeuro.eu
+tim.krysta@justeuro.eu
+
+
+# For billing and payments
+billing@
+
+# Generic Returns Email Inbox
+returns@
+
+# Generic Sales Email Inbox
+sales@
+
+support@
+help@
+development@
+
+
+
+
+################################################################################
+
+
+# root ssh
+X4DT!nevxHg
+
+# SQL root
+K3}%F7}Y=]mMa0u
+
+# Main SQL user
+timsql
+&TbI^5^Y}062Lk`
+
+# Roundcube SQL user
+roundcubeuser
+XBV(pjku?6iB0
+
+
+# Postfixadmin setup password
+DXqd2+O[09wf~
+
+# superuser postfix admin
+admin@justeuro.eu
+E|{54BqYD%'fz(t
+
+
+# MySQL password for postfixadmin (user)
+71yGyny0.{N@vYx
+
+
+
+##############################
+
+
+####################
+
+
+
+
+hr               VwqVK13NV77x
+administration   c7RaE7woDiH9
+administratie    IaVbURR3gs4Z
+support          qCrP8njqRwTP
+privacy          KU56DMPNxv95
+recruitment      ccd5b8DdDepY
+rekrutacja       4I6qA0VdkfVC
+reclutamento     szR0wH4izigA
+recrutare        LAODCSasg8n4
+jobs             I2x8dFzxSCY1
+reports          hkf3OGfXbjiY
+info             bE9j6TJDh6hd
+contact          S02glFMPid2H
+denis            443rAV4nrBAo
+tim              Suu2theu6Iek
+admin            Gvvlj5EZ9D.gi3A
+
+

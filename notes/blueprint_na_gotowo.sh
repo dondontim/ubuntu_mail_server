@@ -1,62 +1,186 @@
-# You can list all available mailbox users with:
-sudo doveadm user '*'
 
-# Check for open ports
-nmap mail.your-domain.com
+# ALREADY DONE: 
+#!!! for restarts
 
-function nnn() {
-  ln "$1" /root/all_files/ 
+# starting with this: cp "${LOCATION_OF_MY_FILES}
+# and this are same so TODO(tim) combine it somehow
+replace_with_my_file 
+
+
+LOCATION_OF_MY_FILES='/root/backup_nr4'
+
+# GLOBALS:
+#   LOCATION_OF_MY_FILES
+function replace_with_my_file() {
+  local ORIGINAL_TO_REPLACE \
+        MY_REPLACEMENT
+
+  ORIGINAL_TO_REPLACE="$1"
+
+  # Replace / with % to get 
+  MY_REPLACEMENT="$(echo "$ORIGINAL_TO_REPLACE" | sed 's;/;%;g')"
+
+  MY_REPLACEMENT="${LOCATION_OF_MY_FILES}/${MY_REPLACEMENT}"
+
+  if [[ ! -f "$MY_REPLACEMENT" ]]; then 
+    echo "MY_REPLACEMENT: $MY_REPLACEMENT file dont exists"
+    return 1
+  else
+    echo "MY_REPLACEMENT: $MY_REPLACEMENT file exists"
+  fi
+  
+
+  if [[ -f "$ORIGINAL_TO_REPLACE" ]]; then 
+    echo "ORIGINAL_TO_REPLACE: $ORIGINAL_TO_REPLACE file exists"
+    rm "$ORIGINAL_TO_REPLACE"
+    mv "$MY_REPLACEMENT" "$ORIGINAL_TO_REPLACE"
+    cp "$ORIGINAL_TO_REPLACE" "$MY_REPLACEMENT"
+  else
+    echo "[!] Error no such file ORIGINAL_TO_REPLACE: $ORIGINAL_TO_REPLACE"
+    return 1
+  fi  
 }
 
-################################################################################
-################################################################################
+function replace_with_my_dir() {
+  local ORIGINAL_TO_REPLACE \
+        MY_REPLACEMENT
 
-################################################################################
-# 1 (Using made shitty script)
-################################################################################
+  ORIGINAL_TO_REPLACE="$1"
 
-sudo apt-get update -y && sudo apt-get upgrade -y && apt-get install -y git curl && git clone https://github.com/dondontim/setup.git && cd setup && bash initial_server_setup.sh
-bash after_initial.sh && cd
+  # Replace / with % to get 
+  MY_REPLACEMENT="$(echo "$ORIGINAL_TO_REPLACE" | sed 's;/;%;g')"
 
-git clone https://github.com/dondontim/ubuntu_mail_server && cd ubuntu_mail_server 
-bash main.sh # 1.sh
+  MY_REPLACEMENT="${LOCATION_OF_MY_FILES}/${MY_REPLACEMENT}"
+
+  if [[ ! -d "$MY_REPLACEMENT" ]]; then 
+    echo "MY_REPLACEMENT: $MY_REPLACEMENT dir dont exists"
+    return 1
+  else
+    echo "MY_REPLACEMENT: $MY_REPLACEMENT dir exists"
+  fi
+
+  
+
+  if [[ -d "$ORIGINAL_TO_REPLACE" ]]; then 
+    echo "ORIGINAL_TO_REPLACE: $ORIGINAL_TO_REPLACE dir exists"
+    rm -r "$ORIGINAL_TO_REPLACE"
+    mv "$MY_REPLACEMENT" "$ORIGINAL_TO_REPLACE"
+  else
+    echo "[!] Error no such dir ORIGINAL_TO_REPLACE: $ORIGINAL_TO_REPLACE"
+    return 1
+  fi  
+}
 
 
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-################################################################################
+  FILES=(
+  #"/etc/hostname"
 
 
+  #"/etc/postfix/my_custom_header" # Is to trash
+
+  #"/etc/postfix/helo_access"
+  #"/etc/postfix/rbl_override"
+  #"/etc/postfix/header_checks"
+  #"/etc/postfix/body_checks"
+  #"/etc/postfix/smtp_header_checks"
+  #"/etc/postfix/postscreen_access.cidr"
+
+  #"/etc/dovecot/dovecot-sql.conf.ext"
+
+  #"/etc/dovecot/conf.d/15-lda.conf"
+  #"/etc/dovecot/conf.d/20-lmtp.conf"
+  #"/etc/dovecot/conf.d/90-sieve.conf"
+  #"/var/mail/SpamToJunk.sieve"
+
+  #"/etc/nginx/sites-available/postfixadmin.justeuro.eu"
+
+ 
+  "/var/spool/cron/crontabs/root"
+  #"/etc/opendkim.conf"
+  #"/etc/default/opendkim"
+  #"/etc/policyd-rate-limit.yaml"
+  "/etc/postgrey/whitelist_clients"
+  "/etc/default/postgrey"
+  "/etc/fail2ban/jail.local"
+  "/etc/fail2ban/filter.d/postfix-flood-attack.conf"
+  #"/etc/default/spamass-milter"
+  #"/etc/default/spamassassin"
+  #"/etc/spamassassin/local.cf"
+  "/var/vmail/justeuro.eu/admin/spamassassin/user_pref"
+  #"/etc/amavis/conf.d/05-node_id"
+  #"/etc/amavis/conf.d/15-content_filter_mode"
+  #"/etc/amavis/conf.d/50-user"
+  #"/etc/amavis/conf.d/21-ubuntu_defaults"
+  #"/etc/unbound/unbound.conf"
+  #"/etc/systemd/system/unbound-resolvconf.service"
+
+  #"/etc/systemd/system/dovecot.service.d/restart.conf"
+  #"/etc/mailname"
+  "/var/www/justeuro.eu/mail/config/config.inc.php"
+  "/var/www/justeuro.eu/mail/plugins/password/config.inc.php"
+
+  "/var/vmail/justeuro.eu/tim/sieve/roundcube.sieve"
+)
+# 15       cuz additionaly added:
+# /usr/share/postfixadmin/
+# /etc/dovecot/
+# /etc/postgrey/
+# /etc/postfix/
+# /etc/fail2ban/
+# 
+# /etc/spamassassin/ # added in 9.
+# /etc/amavis/ # added in 10.
+# /etc/ # added in 12.
+DIRS=(
+  #"/etc/opendkim/"
+  "/etc/systemd/system/dovecot.service.d/"
+  "/usr/share/postfixadmin/templates_c/"
+  "/var/vmail/"
+
+  "/etc/letsencrypt/"
+  "/etc/nginx/"
+
+  #"/etc/postfix/sql/"
+
+  "/usr/share/postfixadmin/"
+  "/etc/dovecot/"
+  "/etc/postgrey/"
+  "/etc/postfix/"
+  "/etc/fail2ban/"
+
+  "/etc/"
+  "/etc/spamassassin/"
+  "/etc/amavis/"
+)
 
 ################################################################################
 # 1
 ################################################################################
-
+NEW_HOSTNAME='mail.justeuro.eu'
 
 POSTFIX_main_mailer_type='Internet Site'
 POSTFIX_mailname="justeuro.eu"
+alias L='less'
 ##########################################
 
-
-
+# update && upgrade is enough I think
 apt-get update -y && sudo apt-get upgrade -y && apt-get autoremove -y && apt-get autoclean -y
 
-cp /etc/hosts
-cp /etc/aliases 
+# Set /etc/hostname too
+hostnamectl set-hostname "$NEW_HOSTNAME"
+replace_with_my_file "/etc/hosts"
+replace_with_my_file "/etc/aliases"
 newaliases
 
 
 # Install postfix
-printf "\n[debconf-set-selections]\n\n"
+#printf "\n[debconf-set-selections]\n\n"
 # Taken from: https://serverfault.com/a/144010
 debconf-set-selections -v <<< "postfix postfix/main_mailer_type string $POSTFIX_main_mailer_type"
 debconf-set-selections -v <<< "postfix postfix/mailname string $POSTFIX_mailname"
 
 
-apt_install postfix
+apt-get install -y postfix
 
 
 # Open TCP Port 25 (inbound) in Firewall
@@ -73,7 +197,7 @@ systemctl restart postfix
 # a configuration type for Postfix again. This time you should choose:
 # 'No configuration' to leave your current configuration file untouched.
 debconf-set-selections <<< "postfix postfix/main_mailer_type string No configuration"
-apt_update_and_upgrade
+apt-get update -y && sudo apt-get upgrade -y 
 
 
 
@@ -90,25 +214,40 @@ ufw allow 80,443,587,465,143,993/tcp
 ufw allow 110,995/tcp
 
 
-# copy all_config_postfix
-cp all_config_postfix
-systemctl restart postfix
+# cp all_config_postfix
+
+replace_with_my_file "/etc/postfix/main.cf"
+replace_with_my_file "/etc/postfix/master.cf"
+
+#!!! systemctl restart postfix
+
+
 
 # install dovecot
-apt install dovecot-core dovecot-imapd
+apt-get install -y dovecot-core dovecot-imapd 
 
 # POP: If you use POP3 to fetch emails, then also install the dovecot-pop3d package.
-sudo apt install dovecot-pop3d
+apt-get install -y dovecot-pop3d
 
-cp all_config_dovecot
+# cp all_config_dovecot
+
+replace_with_my_file "/etc/dovecot/dovecot.conf"
+replace_with_my_file "/etc/dovecot/conf.d/10-mail.conf"
+replace_with_my_file "/etc/dovecot/conf.d/10-master.conf"
+replace_with_my_file "/etc/dovecot/conf.d/10-auth.conf"
+replace_with_my_file "/etc/dovecot/conf.d/10-ssl.conf"
+replace_with_my_file "/etc/dovecot/conf.d/15-mailboxes.conf"
+
 systemctl restart dovecot
 
-# Dovecot Automatic Restart
 
+# Dovecot Automatic Restart
 mkdir -p /etc/systemd/system/dovecot.service.d/
-cp /etc/systemd/system/dovecot.service.d/restart.conf
+cp "${LOCATION_OF_MY_FILES}/%etc%systemd%system%dovecot.service.d%restart.conf" "/etc/systemd/system/dovecot.service.d/restart.conf"
+
+# Reload systemd
 systemctl daemon-reload
-# Test: sudo pkill dovecot && sleep 6 && systemctl status dovecot # Check if restarted automaticaly
+# TEST(tim): sudo pkill dovecot && sleep 6 && systemctl status dovecot # Check if restarted automaticaly
 
 
 ################################################################################
@@ -117,9 +256,9 @@ systemctl daemon-reload
 
 ### Install PostfixAdmin on Ubuntu 20.04 Server
 
-apt install dbconfig-no-thanks
-apt install postfixadmin
-apt remove dbconfig-no-thanks
+apt-get install -y dbconfig-no-thanks
+apt-get install -y postfixadmin
+apt-get remove -y dbconfig-no-thanks
 
 dpkg-reconfigure postfixadmin
 
@@ -130,12 +269,12 @@ dpkg-reconfigure postfixadmin
 # default
 # (enter) postfixadmin
 # (enter)
-# (password 2wice (should not contain the # )
+# (password 2wice (should not contain the # ) : 71yGyny0.{N@vYx
 # choose the default database administrative user. 
 
 # PostfixAdmin
-cp /etc/dbconfig-common/postfixadmin.conf
-cp /etc/postfixadmin/dbconfig.inc.php
+replace_with_my_file "/etc/dbconfig-common/postfixadmin.conf"
+replace_with_my_file "/etc/postfixadmin/dbconfig.inc.php"
 
 mkdir /usr/share/postfixadmin/templates_c
 
@@ -145,32 +284,33 @@ command_exists 'setfacl' || apt install acl
 setfacl -R -m u:www-data:rwx /usr/share/postfixadmin/templates_c/
 
 # Create Nginx Config File for PostfixAdmin
-cp /etc/nginx/conf.d/postfixadmin.conf
+# ALREADY DONE: cp /etc/nginx/conf.d/postfixadmin.conf 
 nginx -t && systemctl reload nginx
 
 # Now you should be able to see the PostfixAdmin web-based install wizard
 # at http://postfixadmin.example.com/setup.php
 
 # Install Required and Recommended PHP Modules
-apt install php7.4-fpm php7.4-imap php7.4-mbstring php7.4-mysql php7.4-json php7.4-curl php7.4-zip php7.4-xml php7.4-bz2 php7.4-intl php7.4-gmp
+apt-get install -y php7.4-fpm php7.4-imap php7.4-mbstring php7.4-mysql php7.4-json php7.4-curl php7.4-zip php7.4-xml php7.4-bz2 php7.4-intl php7.4-gmp
 
 
 # Enabling HTTPS
-certbot --nginx --non-interactive --agree-tos --hsts --staple-ocsp --redirect --cert-name "postfixadmin.justeuro.eu" --no-eff-email -m "krystatymoteusz@gmail.com"  -d "postfixadmin.justeuro.eu" 
+# ALREADY DONE: certbot --nginx --non-interactive --agree-tos --hsts --staple-ocsp --redirect --cert-name "postfixadmin.justeuro.eu" --no-eff-email -m "krystatymoteusz@gmail.com"  -d "postfixadmin.justeuro.eu" 
 # --hsts:        Add the Strict-Transport-Security header to every HTTP response. Forcing browser to always use TLS for the domain. Defends against SSL/TLS Stripping.
 # --staple-ocsp: Enables OCSP Stapling. A valid OCSP response is stapled to the certificate that the server offers during TLS.
 
 
 # Use Strong Password Scheme in PostfixAdmin and Dovecot
-cp /usr/share/postfixadmin/config.local.php 
+cp "${LOCATION_OF_MY_FILES}/%usr%share%postfixadmin%config.local.php" /usr/share/postfixadmin/config.local.php 
 ln -s /usr/share/postfixadmin/config.local.php /etc/postfixadmin/config.local.php
 
 # Add the web server to the dovecot group.
 sudo gpasswd -a www-data dovecot
 
-systemctl restart dovecot
+#!!! systemctl restart dovecot
 
-# NOW OPEN AND CREATE PASSWORD FOR POSTFIX ADMIN
+
+#!!! todo NOW OPEN AND CREATE PASSWORD FOR POSTFIX ADMIN
 # http://postfixadmin.example.com/setup.php
 
 # After creating the password hash, you need to open the 
@@ -179,20 +319,20 @@ systemctl restart dovecot
 
 
 
-
 ## Configure Postfix to Use MySQL/MariaDB Database
 
 # First, we need to add MySQL map support for Postfix by installing the postfix-mysql package.
-apt install postfix-mysql
+apt-get install -y postfix-mysql
 
 mkdir /etc/postfix/sql/
 # all these files should contain password set in postfixadmin installation wizard
-cp /etc/postfix/sql/mysql_virtual_domains_maps.cf
-cp /etc/postfix/sql/mysql_virtual_mailbox_maps.cf
-cp /etc/postfix/sql/mysql_virtual_alias_domain_mailbox_maps.cf
-cp /etc/postfix/sql/mysql_virtual_alias_maps.cf
-cp /etc/postfix/sql/mysql_virtual_alias_domain_maps.cf
-cp /etc/postfix/sql/mysql_virtual_alias_domain_catchall_maps.cf
+cp "${LOCATION_OF_MY_FILES}/%etc%postfix%sql%/mysql_virtual_domains_maps.cf" /etc/postfix/sql/mysql_virtual_domains_maps.cf
+cp "${LOCATION_OF_MY_FILES}/%etc%postfix%sql%/mysql_virtual_mailbox_maps.cf" /etc/postfix/sql/mysql_virtual_mailbox_maps.cf
+cp "${LOCATION_OF_MY_FILES}/%etc%postfix%sql%/mysql_virtual_alias_domain_mailbox_maps.cf" /etc/postfix/sql/mysql_virtual_alias_domain_mailbox_maps.cf
+cp "${LOCATION_OF_MY_FILES}/%etc%postfix%sql%/mysql_virtual_alias_maps.cf" /etc/postfix/sql/mysql_virtual_alias_maps.cf
+cp "${LOCATION_OF_MY_FILES}/%etc%postfix%sql%/mysql_virtual_alias_domain_maps.cf" /etc/postfix/sql/mysql_virtual_alias_domain_maps.cf
+cp "${LOCATION_OF_MY_FILES}/%etc%postfix%sql%/mysql_virtual_alias_domain_catchall_maps.cf" /etc/postfix/sql/mysql_virtual_alias_domain_catchall_maps.cf
+
 
 # Since the database passwords are stored in plain text so they should be readable
 # only by user postfix and root, which is done by executing the following two commands.
@@ -213,13 +353,13 @@ chown vmail:vmail /var/vmail/ -R
 ## Configure Dovecot to Use MySQL/MariaDB Database
 
 # We also need to configure the Dovecot IMAP server to query user information from the database.
-apt install dovecot-mysql
+apt-get install -y dovecot-mysql
 
 # password set in postfixadmin installation wizard
-cp /etc/dovecot/dovecot-sql.conf.ext
+replace_with_my_file "/etc/dovecot/dovecot-sql.conf.ext"
 
 
-systemctl restart dovecot
+#!!! systemctl restart dovecot
 
 
 ## Add Domain and Mailboxes in PostfixAdmin 
@@ -229,10 +369,22 @@ systemctl restart dovecot
 # 2. Virtual List > Add Mailbox
 
 
+#################### ADDITIONALY #########################
+### ADDITIONALY
+#################### ADDITIONALY #########################
+
+# TODO(tim): REPLACE THIS FILE ALSO
+cp /etc/postfixadmin/config.inc.php
+
+### Remove file setup.php
+# Create backup of /usr/share/postfixadmin/public/setup.php
+mv "/usr/share/postfixadmin/public/setup.php" "/usr/share/postfixadmin/public/setup.php.bak"
+
+### REMEMBER TO MAKE BACKUP OF A POSTFIXADMIN DATABASE
 
 
 ################################################################################
-# 4
+# 4 
 ################################################################################
 
 
@@ -241,58 +393,28 @@ systemctl restart dovecot
 
 # We need to tell our Postfix SMTP server to check for SPF record of incoming emails. 
 # This help with detecting forged incoming emails.
-apt install postfix-policyd-spf-python
+apt-get install -y postfix-policyd-spf-python
 
 
 ### Setting up DKIM
 
-apt install opendkim opendkim-tools
+apt-get install -y opendkim opendkim-tools
 
 # Then add postfix user to opendkim group.
 gpasswd -a postfix opendkim #aoeuaoeu
 
-cp /etc/opendkim.conf
+replace_with_my_file "/etc/opendkim.conf"
 
 
-### Create Signing Table, Key Table and Trusted Hosts File
 
-# Create a directory structure for OpenDKIM
-mkdir /etc/opendkim
-mkdir /etc/opendkim/keys
+# Below 3 lines are enough for all above section so commented
+mv "${LOCATION_OF_MY_FILES}/%etc%opendkim%" /etc/opendkim
 # Change the owner from root to opendkim and make sure only opendkim user
 # can read and write to the keys directory.
 chown -R opendkim:opendkim /etc/opendkim
 chmod go-rw /etc/opendkim/keys
-
-cp /etc/opendkim/signing.table
-cp /etc/opendkim/key.table
-cp /etc/opendkim/trusted.hosts
-
-
-### Generate Private/Public Keypair
-
-# Create a separate folder for the domain.
-mkdir /etc/opendkim/keys/justeuro.eu
-
-# Generate keys using opendkim-genkey tool.
-opendkim-genkey -b 2048 -d justeuro.eu -D /etc/opendkim/keys/justeuro.eu -s default -v
-# Once executed, the private key will be written to default.private file
-# and the public key will be written to default.txt file.
-
-# Make opendkim as the owner of the private key.
-chown opendkim:opendkim /etc/opendkim/keys/justeuro.eu/default.private
-
 # And change the permission, so only the opendkim user has read and write access to the file.
-chmod 600 /etc/opendkim/keys/justeuro.eu/default.private #aoeuaoeu
-
-
-### Publish Your Public Key in DNS Records
-
-#cat /etc/opendkim/keys/justeuro.eu/default.txt
-# In your DNS manager, create a TXT record, enter default._domainkey in the name field.
-# Copy everything in the parentheses and paste it into the value field of the DNS record. 
-# You need to delete all double quotes and white spaces in the value field. 
-
+chmod 600 /etc/opendkim/keys/justeuro.eu/default.private
 
 
 ### Test DKIM Key
@@ -308,9 +430,10 @@ opendkim-testkey -d justeuro.eu -s default -vvv
 mkdir /var/spool/postfix/opendkim
 chown opendkim:postfix /var/spool/postfix/opendkim
 
-cp /etc/default/opendkim
+replace_with_my_file "/etc/default/opendkim"
 
-systemctl restart opendkim postfix
+systemctl restart opendkim
+#!!! systemctl restart opendkim postfix
 
 
 
@@ -323,7 +446,6 @@ systemctl restart opendkim postfix
 mkdir /var/spool/postfix/opendkim
 chown -R opendkim:opendkim /var/spool/postfix/opendkim
 ############################################################
-
 
 
 
@@ -356,10 +478,12 @@ chown -R opendkim:opendkim /var/spool/postfix/opendkim
 
 ### SMTP Rate Limiting
 
-apt install policyd-rate-limit
-cp /etc/policyd-rate-limit.yaml
+apt-get install -y policyd-rate-limit
+replace_with_my_file "/etc/policyd-rate-limit.yaml"
 
-systemctl restart postfix policyd-rate-limit
+systemctl restart policyd-rate-limit
+#!!! systemctl restart postfix policyd-rate-limit
+
 
 
 
@@ -373,14 +497,15 @@ systemctl restart postfix policyd-rate-limit
 ### BE SURE TO CHECK IT ONCE AGAIN
 
 
-cp /etc/postfix/helo_access
+cp "${LOCATION_OF_MY_FILES}/%etc%postfix%helo_access" /etc/postfix/helo_access
+
 
 # Then run the following command to create the /etc/postfix/helo_access.db file.
 postmap /etc/postfix/helo_access
 
 
 # Enable Greylisting in Postfix
-apt install postgrey
+apt-get install -y postgrey
 
 # Once it’s installed, start it with systemctl.
 systemctl start postgrey
@@ -399,7 +524,7 @@ sudo journalctl -u postgrey
 
 
 
-cp /etc/postfix/rbl_override
+cp "${LOCATION_OF_MY_FILES}/%etc%postfix%rbl_override" /etc/postfix/rbl_override
 # Hash the blacklist
 # the file must be converted to a database that Postfix can read. 
 # This must be done every time rbl_override is updated.
@@ -407,11 +532,11 @@ postmap /etc/postfix/rbl_override
 
 
 
-apt install mutt
+apt-get install -y mutt
 
 
 
-apt install fail2ban
+apt-get install -y fail2ban
 
 
 
@@ -420,67 +545,77 @@ apt install fail2ban
 # 9.
 ################################################################################
 
-apt install postfix-pcre
+apt-get install -y postfix-pcre
 
 # header_checks
-cp /etc/postfix/header_checks
-postmap /etc/postfix/header_checks # Kluci sie z custom_header in main.cf
+cp "${LOCATION_OF_MY_FILES}/%etc%postfix%header_checks" /etc/postfix/header_checks
+# Kluci sie z custom_header in main.cf dlatego custom_header is deleted
+postmap /etc/postfix/header_checks 
 
 # body_checks
-cp /etc/postfix/body_checks
+cp "${LOCATION_OF_MY_FILES}/%etc%postfix%body_checks" /etc/postfix/body_checks
 postmap /etc/postfix/body_checks
 
 
 # Install SpamAssassin
-apt install spamassassin spamc
+apt-get install -y spamassassin spamc
 
 systemctl enable spamassassin
 systemctl start spamassassin
 
 # Integrate SpamAssassin with Postfix SMTP Server as a Milter
-apt install spamass-milter
+apt-get install -y spamass-milter
 
 
 
-cp /etc/default/spamass-milter
+replace_with_my_file "/etc/default/spamass-milter"
 
 
 
 
-systemctl restart postfix spamass-milter
+systemctl restart spamass-milter
+#!!! systemctl restart postfix spamass-milter
 
 
 
-cp /etc/default/spamassassin
-cp /etc/spamassassin/local.cf # local config  
+
+replace_with_my_file "/etc/default/spamassassin"
+replace_with_my_file "/etc/spamassassin/local.cf" # local config  
 
 systemctl restart spamassassin
+#!!! systemctl restart spamassassin
+
 
 
 # Move Spam into the Junk Folder
 
 # This package installs two configuration files under 
 # /etc/dovecot/conf.d/ directory: 90-sieve.conf and 90-sieve-extprograms.conf.
-apt install dovecot-sieve
+apt-get install -y dovecot-sieve
 
 
-cp /etc/dovecot/conf.d/15-lda.conf
-cp /etc/dovecot/conf.d/20-lmtp.conf
-cp /etc/dovecot/conf.d/90-sieve.conf
-cp /var/mail/SpamToJunk.sieve
+cp "${LOCATION_OF_MY_FILES}/%etc%dovecot%conf.d%15-lda.conf" /etc/dovecot/conf.d/15-lda.conf
+cp "${LOCATION_OF_MY_FILES}/%etc%dovecot%conf.d%20-lmtp.conf" /etc/dovecot/conf.d/20-lmtp.conf
+cp "${LOCATION_OF_MY_FILES}/%etc%dovecot%conf.d%90-sieve.conf" /etc/dovecot/conf.d/90-sieve.conf
+cp "${LOCATION_OF_MY_FILES}/%var%mail%SpamToJunk.sieve" /var/mail/SpamToJunk.sieve
+#cp /etc/dovecot/conf.d/15-lda.conf
+#cp /etc/dovecot/conf.d/20-lmtp.conf
+#cp /etc/dovecot/conf.d/90-sieve.conf
+#cp /var/mail/SpamToJunk.sieve
 
 # We can compile this script, so it will run faster.
 sievec /var/mail/SpamToJunk.sieve
 
 # Now there is a binary file saved as /var/mail/SpamToJunk.svbin. 
 # Finally, restart dovecot for the changes to take effect.
-systemctl restart dovecot
+#!!! systemctl restart dovecot
 
 # user specific - seems not working for 17 Nov
-cp /var/vmail/justeuro.eu/admin/spamassassin/user_pref
+#!!! TODO(tim): cp /var/vmail/justeuro.eu/admin/spamassassin/user_pref
 
 # Deleting Email Headers For Outgoing Emails
-cp /etc/postfix/smtp_header_checks
+cp "${LOCATION_OF_MY_FILES}/%etc%postfix%smtp_header_checks" /etc/postfix/smtp_header_checks
+#cp /etc/postfix/smtp_header_checks
 postmap /etc/postfix/smtp_header_checks
 systemctl reload postfix
 
@@ -490,7 +625,7 @@ systemctl reload postfix
 ################################################################################
 
 
-apt install amavisd-new -y
+apt-get install -y amavisd-new 
 
 # Enable auto-start at boot time.
 systemctl enable amavis
@@ -501,24 +636,29 @@ journalctl -eu amavis
 # Viruses are commonly spread as attachments to email messages. 
 # Install the following packages for Amavis to extract and scan archive files 
 # in email messages such as .7z, .cab, .doc, .exe, .iso, .jar, and .rar files.
-apt install arj bzip2 cabextract cpio rpm2cpio file gzip lhasa nomarch pax p7zip-full unzip zip lrzip lzip liblz4-tool lzop unrar-free
-apt-get install unrar-free # this is replacement for original: rar unrar packages names
+apt-get install -y arj bzip2 cabextract cpio rpm2cpio file gzip lhasa nomarch pax p7zip-full unzip zip lrzip lzip liblz4-tool lzop unrar-free
+apt-get install -y unrar-free # this is replacement for original: rar unrar packages names
 
 
 # NOTE: that if your server doesn’t use a fully-qualified domain name (FQDN) 
 # as the hostname, Amavis might fail to start. And the OS hostname might change,
 # so it’s recommended to set a valid hostname directly in the Amavis configuration file.
 # IN: /etc/amavis/conf.d/05-node_id
-cp /etc/amavis/conf.d/05-node_id
+replace_with_my_file "/etc/amavis/conf.d/05-node_id"
 systemctl restart amavis
+#!!! systemctl restart amavis
+
 
 
 
 ### Integrate Amavis with ClamAV
-apt install clamav clamav-daemon
+apt-get install -y clamav clamav-daemon
 # There will be two systemd services installed by ClamAV:
 #   clamav-daemon.service: the Clam AntiVirus userspace daemon
 #   clamav-freshclam.service: the ClamAV virus database updater
+
+
+#!!! Look line above
 
 # Check journal/log
 journalctl -eu clamav-freshclam
@@ -526,7 +666,8 @@ journalctl -eu clamav-freshclam
 
 # it will fail main.cvd and daily.cvd (ClamAV Virus Database) were not downloaded yet when it starts. 
 systemctl status clamav-daemon 
-sudo systemctl restart clamav-daemon # so restart it
+systemctl restart clamav-daemon # so restart it
+#!!! systemctl restart clamav-daemon
 
 ### BTW: If your mail server doesn’t have enough RAM left, the service will fail.
 ### just this: systemctl status clamav-daemon.service uses on my server 1.1GB!!! 
@@ -534,7 +675,7 @@ sudo systemctl restart clamav-daemon # so restart it
 # The clamav-freshclam.service will check ClamAV virus database updates once per hour.
 
 # Now we need to turn on virus-checking in Amavis.
-cp /etc/amavis/conf.d/15-content_filter_mode
+replace_with_my_file "/etc/amavis/conf.d/15-content_filter_mode"
 
 
 # There are lots of antivirus scanners in the /etc/amavis/conf.d/15-av_scanners file.
@@ -542,6 +683,7 @@ cp /etc/amavis/conf.d/15-content_filter_mode
 # We need to add user clamav to the amavis group.
 adduser clamav amavis
 systemctl restart amavis clamav-daemon
+#!!! systemctl restart amavis clamav-daemon
 
 # Test if received email have:
 # ex. header: X-Virus-Scanned: Debian amavisd-new at justeuro.eu
@@ -551,13 +693,15 @@ systemctl restart amavis clamav-daemon
 ### Use A Dedicated Port for Email Submissions
 # NOTE: Custom settings should be added between the use strict; and 1; line.
 
-cp /etc/amavis/conf.d/50-user
+replace_with_my_file "/etc/amavis/conf.d/50-user"
 systemctl restart amavis
+#!!! systemctl restart amavis
 
 
 # If you have OpenDKIM running on your mail server, then you can disable DKIM verification in Amavis.
-cp /etc/amavis/conf.d/21-ubuntu_defaults
+replace_with_my_file "/etc/amavis/conf.d/21-ubuntu_defaults"
 systemctl restart amavis
+#!!! systemctl restart amavis
 
 
 ### Improve amavis performance
@@ -572,8 +716,10 @@ systemctl restart amavis
 # 12. (i do not do 11 (VPN))
 ################################################################################
 
-cp /etc/postfix/postscreen_access.cidr
+cp "${LOCATION_OF_MY_FILES}/%etc%postfix%postscreen_access.cidr" /etc/postfix/postscreen_access.cidr
+#cp /etc/postfix/postscreen_access.cidr
 systemctl restart postfix
+#!!! systemctl restart postfix
 
 # Note: Postscreen listens on port 25 only, 
 # so authenticated users from port 587 or 465 won’t be affected by Postscreen.
@@ -594,16 +740,16 @@ systemctl restart postfix
 
 ## Using Postwhite
 cd /usr/local/bin/
-apt install git
+apt-get install -y git
 # Clone the SPF-Tools and Postwhite Github repository.
 git clone https://github.com/spf-tools/spf-tools.git
 git clone https://github.com/stevejenkins/postwhite.git
 
 # Copy the postwhite.conf file to /etc/.
-sudo cp /usr/local/bin/postwhite/postwhite.conf /etc/
+cp /usr/local/bin/postwhite/postwhite.conf /etc/
 
 # Run Postwhite.
-sudo /usr/local/bin/postwhite/postwhite
+/usr/local/bin/postwhite/postwhite
 # The whitelist will be save as /etc/postfix/postscreen_spf_whitelist.cidr.
 
 
@@ -612,6 +758,7 @@ sudo /usr/local/bin/postwhite/postwhite
 # SETTING UP LOCAL DNS RESOLVER
 ################################################################################
 
+#!!! HERE IS A LOT
 
 ########### Unbound ##############
 #
@@ -628,8 +775,8 @@ function is_service_running() {
 
 
 ### Install Unbound DNS Resolver on Ubuntu 20.04
-apt update
-apt install unbound
+apt-get update -y
+apt-get install -y unbound
 
 # If it’s not running, then start it with:
 systemctl start unbound
@@ -645,7 +792,7 @@ systemctl enable unbound
 systemctl disable named --now
 
 
-cp /etc/unbound/unbound.conf
+replace_with_my_file "/etc/unbound/unbound.conf"
 
 # By default, Ubuntu runs the systemd-resolved stub resolver which listens on 127.0.0.53:53. 
 # You need to stop it, so unbound can bind to 0.0.0.0:53.
@@ -657,7 +804,7 @@ systemctl restart unbound
 # then you need to open port 53 to allow LAN clients to send DNS queries.
 
 # This will open TCP and UDP port 53 to the private network (if you have VPN setup) 10.0.0.0/8.
-#ufw allow in from 10.0.0.0/8 to any port 53 
+#ufw allow in from 10.0.0.0/8 to any port 53
 ufw allow in from 190.92.134.0/24 to any port 53
 
 
@@ -669,15 +816,18 @@ ufw allow in from 190.92.134.0/24 to any port 53
 # help us accomplish this. However, I found it won’t work.
 #
 # Instead, create a custom unbound-resolvconf.service
-cp /etc/systemd/system/unbound-resolvconf.service
+cp "${LOCATION_OF_MY_FILES}/%etc%systemd%system%unbound-resolvconf.service" /etc/systemd/system/unbound-resolvconf.service
+#cp /etc/systemd/system/unbound-resolvconf.service
 
 
 # Reload systemd
 systemctl daemon-reload
 # Make sure your system has the resolvconf binary.
-apt-get install openresolv -y
+apt-get install -y openresolv
 # Next, restart this service.
 systemctl restart unbound-resolvconf.service
+
+
 
 if is_service_running "unbound"; then
   if grep -q 'nameserver 127.0.0.1' /etc/resolv.conf; then
@@ -693,12 +843,62 @@ fi
 
 
 ################################################################################
-# Additional commit - before webmail
+# Additional commit - before webmail TODO(tim): delete this section
 ################################################################################
 
-cp /etc/mailname
+#cp /etc/mailname
+echo "$POSTFIX_mailname" > /etc/mailname
 
-I moved /etc/nginx/conf.d/postfixadmin.conf /etc/nginx/sites-available/postfixadmin.justeuro.eu
+I moved /etc/nginx/conf.d/postfixadmin.conf /etc/nginx/sites-available/justeuro.eu/postfixadmin
+
+
+
+
+### Configure the Sieve Message Filter
+
+############### TODO(tim): You need to configure it before roundcube because it is required by 
+# my files dovecot.conf
+
+# You can create folders in Roundcube webmail and then create rules to filter
+# email messages into different folders. In order to do this, you need to install
+# the ManageSieve server with the following command.
+apt-get install -y dovecot-sieve dovecot-managesieved
+
+# By default, Postfix uses its builtin local delivery agent (LDA) to move inbound emails
+# to the message store (inbox, sent, trash, Junk, etc). 
+# We can configure it to use Dovecot to deliver emails, via the LMTP protocol, 
+# which is a simplified version of SMTP. LMTP allows for a highly scalable 
+# and reliable mail system and it is required if you want to use 
+# the sieve plugin to filter inbound messages to different folders.
+#
+# Install the Dovecot LMTP Server.
+apt-get install -y dovecot-lmtpd
+
+systemctl restart postfix dovecot # not really needed
+
+
+# TODO(tim): RESTART ALL SERVICES HERE
+
+systemctl daemon-reload
+systemctl restart opendkim postfix dovecot policyd-rate-limit spamass-milter spamassassin amavis clamav-freshclam clamav-daemon unbound unbound-resolvconf
+systemctl status opendkim postfix dovecot policyd-rate-limit spamass-milter spamassassin amavis clamav-freshclam clamav-daemon unbound unbound-resolvconf | less
+
+
+#### NOTE: roundcube filters are stored in: 
+## /var/vmail/domain.com/user/sieve/roundcube.sieve
+#cp /var/vmail/justeuro.eu/tim/sieve/roundcube.sieve # not required (roundcube filters)
+
+### Removing Sensitive Information from Email Headers
+
+# By default, Roundcube will add a User-Agent email header, 
+# indicating that you are using Roundcube webmail and the version number. 
+# You can tell Postfix to ignore it so recipient can not see it.
+# 
+# this is to file to strip headers: /etc/postfix/smtp_header_checks
+# after editing always do: postmap /etc/postfix/smtp_header_checks
+# and in main.cf  smtp_header_checks  directive regulates it 
+# systemctl reload postfix
+
 
 
 
@@ -711,56 +911,71 @@ I moved /etc/nginx/conf.d/postfixadmin.conf /etc/nginx/sites-available/postfixad
 ### Download Roundcube Webmail on Ubuntu 20.04
 # You can always check the current version: https://roundcube.net/download/
 ROUNDCUBE_VERSION="1.4.12"
-ROUNDCUBE_ROOT_LOCATION="/var/www/justeuro.eu/roundcube" # separate subdomain: /var/www/roundcube.justeuro.eu/
+ROUNDCUBE_ROOT_LOCATION="/var/www/justeuro.eu/mail" # separate subdomain: /var/www/mail.justeuro.eu/
 
 wget "https://github.com/roundcube/roundcubemail/releases/download/${ROUNDCUBE_VERSION}/roundcubemail-${ROUNDCUBE_VERSION}-complete.tar.gz"
 
 # Extract the tarball, move the newly created folder to web root (/var/www/) and rename it as roundcube at the same time.
 tar xvf "roundcubemail-${ROUNDCUBE_VERSION}-complete.tar.gz"
-mv "roundcubemail-${ROUNDCUBE_VERSION}" "$ROUNDCUBE_ROOT_LOCATION" 
+mv roundcubemail-${ROUNDCUBE_VERSION}/* "$ROUNDCUBE_ROOT_LOCATION" 
 
 ### Install Dependencies
 
 # Install required PHP extensions.
-apt install php-net-ldap2 php-net-ldap3 php-imagick php7.4-common php7.4-gd php7.4-imap php7.4-json php7.4-curl php7.4-zip php7.4-xml php7.4-mbstring php7.4-bz2 php7.4-intl php7.4-gmp
+apt-get install -y php-net-ldap2 php-net-ldap3 php-imagick php7.4-common php7.4-gd php7.4-imap php7.4-json php7.4-curl php7.4-zip php7.4-xml php7.4-mbstring php7.4-bz2 php7.4-intl php7.4-gmp
 # Install Composer, which is a dependency manager for PHP.
-apt install composer
+apt-get install -y composer
 # Change into the roundcube directory.
 cd "$ROUNDCUBE_ROOT_LOCATION"
 # Use Composer to install all needed dependencies (3rd party libraries) for Roundcube Webmail.
-composer install --no-dev
+composer install --no-dev # TODO(tim): RUN IT AS TIM USER
 ## NOTE(tim): to run above command i did change open_basedir in php.ini
 ## TODO(tim): Set for fpm also .ini - php cli is cli and fpm is server processing files apache/nginx
 
 # If you see the nothing to install or update message, then all dependencies are installed.
 
 # Make the web server user (www-data) as the owner of the temp and logs directory so that web server can write to these two directories.
-sudo chown www-data:www-data temp/ logs/ -R
+chown www-data:www-data temp/ logs/ -R
 
 
 ### Create a MariaDB Database and User for Roundcube
 
 # Execute SQL file creating database, user and granting priviledges
-mysql -u root < roundcube_setup.sql
+#mysql -u root < roundcube_setup.sql
+# OR sth like
+#
+# Then create a new database for Roundcube using the following command. 
+# This tutorial name it roundcube, you can use whatever name you like for the database.
+mysql -u root -e "CREATE DATABASE roundcube DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
+# Next, create a new database user on localhost using the following command. 
+# Again, this tutorial name it roundcubeuser, you can use whatever name you like. 
+# Replace password with your preferred password.
+mysql -u root -e "CREATE USER roundcubeuser@localhost IDENTIFIED BY 'XBV(pjku?6iB0';"
+# Then grant all permission of the new database to the new user so later on Roundcube webmail can write to the database.
+mysql -u root -e "GRANT ALL PRIVILEGES ON roundcube.* TO roundcubeuser@localhost;"
+# Flush the privileges table for the changes to take effect.
+mysql -u root -e "flush privileges;"
+
 
 # Import the initial tables to roundcube database.
-sudo mysql roundcube < "${ROUNDCUBE_ROOT_LOCATION}/SQL/mysql.initial.sql"
+mysql roundcube < "${ROUNDCUBE_ROOT_LOCATION}/SQL/mysql.initial.sql"
 
 
 
 ### Nginx Config File for Roundcube
 
-cp /etc/nginx/sites-available/roundcube.justeuro.eu
-ln -s /etc/nginx/sites-available/roundcube.justeuro.eu /etc/nginx/sites-enabled/
+# ALREADY DONE: cp /etc/nginx/sites-available/roundcube.justeuro.eu
+# ALREADY DONE: ln -s /etc/nginx/sites-available/roundcube.justeuro.eu /etc/nginx/sites-enabled/
 
-#certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --email krystatymoteusz@gmail.com -d roundcube.justeuro.eu
+# ALREADY DONE: #certbot --nginx --agree-tos --redirect --hsts --staple-ocsp --email krystatymoteusz@gmail.com -d roundcube.justeuro.eu
 
 ### Finish the Installation in Web Browser
-https://roundcube.justeuro.eu/installer/
+https://mail.justeuro.eu/installer/
 
 # This was generated by installer and have to be put here
 # More configuration options: https://github.com/roundcube/roundcubemail/wiki/Configuration
-cp "${ROUNDCUBE_ROOT_LOCATION}/config/config.inc.php"
+
+cp "${LOCATION_OF_MY_FILES}/%var%www%justeuro.eu%mail%config%config.inc.php" "${ROUNDCUBE_ROOT_LOCATION}/config/config.inc.php"
 
 
 # After completing the installation and the final tests please 
@@ -773,39 +988,9 @@ cp "${ROUNDCUBE_ROOT_LOCATION}/config/config.inc.php"
 rm "${ROUNDCUBE_ROOT_LOCATION}/installer/" -r
 
 
-### Configure the Sieve Message Filter
 
-# You can create folders in Roundcube webmail and then create rules to filter
-# email messages into different folders. In order to do this, you need to install
-# the ManageSieve server with the following command.
-apt install dovecot-sieve dovecot-managesieved
 
-# By default, Postfix uses its builtin local delivery agent (LDA) to move inbound emails
-#  to the message store (inbox, sent, trash, Junk, etc). 
-# We can configure it to use Dovecot to deliver emails, via the LMTP protocol, 
-# which is a simplified version of SMTP. LMTP allows for a highly scalable 
-# and reliable mail system and it is required if you want to use 
-# the sieve plugin to filter inbound messages to different folders.
-#
-# Install the Dovecot LMTP Server.
-apt install dovecot-lmtpd
 
-systemctl restart postfix dovecot # not really needed
-
-## NOTE: roundcube filters are stored in: 
-## /var/vmail/domain.com/user/sieve/roundcube.sieve
-cp /var/vmail/justeuro.eu/tim/sieve/roundcube.sieve # not required (roundcube filters)
-
-### Removing Sensitive Information from Email Headers
-
-# By default, Roundcube will add a User-Agent email header, 
-# indicating that you are using Roundcube webmail and the version number. 
-# You can tell Postfix to ignore it so recipient can not see it.
-# 
-# this is to file to strip headers: /etc/postfix/smtp_header_checks
-# after editing always do: postmap /etc/postfix/smtp_header_checks
-# and in main.cf  smtp_header_checks  directive regulates it 
-# systemctl reload postfix
 
 
 ### Configure the Password Plugin in Roundcube
@@ -862,15 +1047,13 @@ roundcubemail-1.5.0/bin/installto.sh "${ROUNDCUBE_ROOT_LOCATION}/"
 ################################################################################
 
 
-TODO remember to change /var/www/justeuro.eu/roundcube to /var/www/roundcube.justeuro.eu
-TODO remember to change roundcube.justeuro.eu to mail.justeuro.eu
-
-
 # Somebodys roundcube plugins
 # https://notes.sagredo.eu/en/qmail-notes-185/roundcube-plugins-35.html
 
 TODO repair auto sending for password change in croncab
 
+
+copy to backup_nr4: /var/www/justeuro.eu/mail/config/mime.types
 
 
 

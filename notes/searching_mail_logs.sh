@@ -24,6 +24,19 @@ sudo iptables -I INPUT -s 12.34.56.78 -j DROP
 sudo ufw insert 1 deny from 12.34.56.78 to any
 
 
+################ Dovecot Log Report
+
+# https://doc.dovecot.org/admin_manual/logging/
+
+## Log File Location
+# Check!!! : https://doc.dovecot.org/admin_manual/logging/#changing-log-file-paths
+doveadm log find
+
+# You can easily print the last 1000 error messages of a running Dovecot:
+doveadm log errors
+
+
+################  TODO(tim): search tools to analyze /var/log/syslog
 
 
 
@@ -38,7 +51,7 @@ sudo ufw insert 1 deny from 12.34.56.78 to any
 
 #
 # Pflogsumm is a great tool to create a summary of Postfix logs. Install it on Ubuntu with:
-apt install pflogsumm
+apt-get install -y pflogsumm
 
 # Generate a report for today.
 pflogsumm -d today /var/log/mail.log
@@ -67,7 +80,7 @@ pflogsumm -d today /var/log/mail.log --rej-add-from --verbose-msg-detail
 grep -i 'warning' /var/log/mail.log
 grep -i 'denied' /var/log/mail.log
 # fgrep == grep -F == Interpret PATTERNS as fixed strings, not regular expressions.
-fgrep 'error' mail.log
+fgrep 'error' /var/log/mail.log
 
 # Rejected via filters
 grep -i 'reject' /var/log/mail.log

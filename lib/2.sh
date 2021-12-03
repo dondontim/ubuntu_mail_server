@@ -62,7 +62,8 @@ EOF
 
 ### Specify the location of TLS certificate and private key in $POSTFIX_MAIN_CF
 function postfix_set_tls_parameters() {
-  # TODO(tim): set path to lets encrypt
+
+  # Set path to lets encrypt!!!!! do it
 
   # Comment out
   # postconf -# smtp_tls_CApath

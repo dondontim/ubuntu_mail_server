@@ -34,8 +34,10 @@ function using_pop3_to_fetch_emails() {
 }
 
 
-justeuro.eu
-postfixadmin.justeuro.eu
-roundcube.justeuro.eu
-cdn.justeuro.eu
-hackmeifyoucan.justeuro.eu
+
+### USEful and intresting
+
+### Append line after match
+sed -i $'/# server_tokens off;/a \tserver_tokens off;' /etc/nginx/nginx.conf
+# some_command | sed $'1itext\ttext'
+# Bash will process escapes, such as \t, inside $' ' before passing it as an arg to sed.

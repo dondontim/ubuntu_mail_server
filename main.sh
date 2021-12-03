@@ -92,8 +92,6 @@ ETC_ALIASES='/etc/aliases'
 POSTMASTER_ALIAS_USERNAME='tim'
 
 
-# TODO(tim): move variables logicaly to their sections
-
 
 # ${BASH_SOURCE[0]}
 # if file2 (sourced) is in a different directory then:
@@ -121,7 +119,7 @@ main_1
 
 # You can send plain text emails and read incoming emails using the command line.
 
-# TODO(tim): Append $APEX_DOMAIN to 'mydestination = ' to be able to send emails 
+# If you Append $APEX_DOMAIN to 'mydestination = ' you will be able to send emails 
 # from inside server e.g. from root@justeuro.eu to tim@justeuro.eu
 
 

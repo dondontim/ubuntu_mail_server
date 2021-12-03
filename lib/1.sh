@@ -128,8 +128,7 @@ function set_ipv4_only() {
 #######################################
 function main_1() {
 
-  # TODO(tim): apt_update_and_upgrade is enough cuz autoclean should be in initial_server_setup.sh
-  apt_update_and_upgrade_and_autoremove_and_autoclean
+  apt_update_and_upgrade
 
   change_hostname
 
