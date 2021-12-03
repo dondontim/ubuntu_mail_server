@@ -1,4 +1,5 @@
 
+# TODO(tim): Clean these below stuff
 echo "" > /var/log/mail.err
 echo "" > /var/log/mail.log
 systemctl restart opendkim postfix dovecot policyd-rate-limit postgrey fail2ban
@@ -22,6 +23,36 @@ sudo iptables -L
 sudo iptables -I INPUT -s 12.34.56.78 -j DROP
 # If you use UFW (iptables frontend), then run
 sudo ufw insert 1 deny from 12.34.56.78 to any
+
+
+
+
+
+
+##### LOG ANALYSYS (tools)
+#
+# Opensource tools
+https://opensource.com/article/19/4/log-analysis-tools 
+
+https://www.graylog.org/success/linux
+# Greylog demo
+https://go2.graylog.org/see-demo-multi-dates 
+
+# Greylog Install instructions
+https://docs.graylog.org/docs/operating-system-packages
+
+### PREQUISICIES
+
+# Install java on ubuntu
+https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-on-ubuntu-20-04
+
+# Install elastcisearch
+https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-elasticsearch-on-ubuntu-20-04
+
+
+
+
+
 
 
 ################ Dovecot Log Report

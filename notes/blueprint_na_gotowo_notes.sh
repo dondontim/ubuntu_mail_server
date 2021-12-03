@@ -2,7 +2,7 @@
 apt-get update -y && sudo apt-get upgrade -y && apt-get install -y git curl && git clone https://github.com/dondontim/web_server_setup.git && cd web_server_setup
 
 dondontim
-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
+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
 \
 \
 K3}%F7}Y=]mMa0u
@@ -12,12 +12,16 @@ K3}%F7}Y=]mMa0u
 \
 \
 dondontim
-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
+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
 
 cd
 git clone https://github.com/dondontim/backup_nr4.git
 dondontim
-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
+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
+
+# TODO(tim): use below format to make it faster
+# git clone https://dondontim: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@github.com/dondontim/backup_nr4.git
+
 
 
 

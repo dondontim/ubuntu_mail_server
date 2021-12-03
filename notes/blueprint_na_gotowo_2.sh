@@ -5,6 +5,8 @@
 # TODO(tim): processing dovecot-core takes ton of time probably because it fails and retries (set sieve closer to dovecot or before)
 
 # TODO(tim): trash and spam do not create at start think if it should behave that way
+# Cuz it fails: doveadm expunge -A mailbox Junk savedbefore 2w;doveadm expunge -A mailbox Trash savedbefore 2w
+
 
 # TODO(tim): TEST spamassasin user_prefs
 
@@ -35,6 +37,127 @@ For other details, see the local mail logfile
 
 
 # TODO(tim): think of not sending emails from root (cronjob)
+
+
+# TODO(tim): Install certbot cuz as you copy letsencrypt you dont install it (but you have to renew it)
+# and in full backup do git push letsencrypt
+
+# Install pflogsumm also cuz cronjob
+
+
+### Testing email
+
+# Complex tests
+https://mxtoolbox.com/SuperTool.aspx
+https://mxtoolbox.com/diagnostic.aspx
+
+# Inbound emails will be delayed for a few minutes, because greylisting is enabled, 
+# which tells other sending SMTP server to try delivering the email again after several minutes.
+# This is useful to block spam. 
+# The following message in /var/log/mail.log indicates greylisting is enabled.
+# |
+# | postfix/postscreen[20995]: NOQUEUE: reject: RCPT from [34.209.113.130]:36980: 450 4.3.2 Service currently unavailable;
+# |
+# However, greylisting can be rather annoying. 
+# You can disable it by editing the Postfix main configuration file: 
+# /etc/postfix/main.cf
+# Find the following lines at the end of the file and comment them out. 
+# (Add a # character at the beginning of each line.)
+# |
+# | postscreen_pipelining_enable = yes
+# | postscreen_pipelining_action = enforce
+# | 
+# | postscreen_non_smtp_command_enable = yes
+# | postscreen_non_smtp_command_action = enforce
+# | 
+# | postscreen_bare_newline_enable = yes
+# | postscreen_bare_newline_action = enforce
+# | 
+# Save and close the file. Then restart Postfix for the changes to take effect.
+# | systemctl restart postfix
+# Now you should be able to receive emails without waiting several minutes.
+https://www.wormly.com/test-smtp-server
+
+# Testing email
+https://www.mail-tester.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mail.err
+
+Dec  3 04:12:14 mail spamass-milter[47460]: spamass-milter 0.4.0 starting
+Dec  3 04:12:20 mail spamass-milter[47574]: spamass-milter 0.4.0 starting
+Dec  3 04:12:25 mail postfix/master[33575]: fatal: :::submission: Address family for hostname not supported
+Dec  3 04:12:26 mail postfix/postfix-script[48041]: fatal: the Postfix mail system is not running
+Dec  3 04:19:59 mail dovecot: master: Fatal: service(lmtp) access(/usr/lib/dovecot/lmtp) failed: No such file or directory
+Dec  3 04:21:47 mail spamass-milter[232688]: spamass-milter 0.4.0 starting
+Dec  3 04:50:19 mail spamass-milter[232688]: Could not retrieve sendmail macro "i"!.  Please add it to confMILTER_MACROS_ENVFROM for better spamassassin results
+Dec  3 04:50:19 mail spamc[234109]: connect to spamd on ::1 failed, retrying (#1 of 3): Connection refused
+Dec  3 04:54:57 mail spamc[234187]: connect to spamd on ::1 failed, retrying (#1 of 3): Connection refused
+Dec  3 06:18:02 mail postfix/sendmail[415018]: fatal: User amavis(119) is not allowed to submit mail
+Dec  3 12:58:54 mail spamc[417365]: connect to spamd on ::1 failed, retrying (#1 of 3): Connection refused
+Dec  3 13:06:34 mail spamc[417445]: connect to spamd on ::1 failed, retrying (#1 of 3): Connection refused
+Dec  3 13:08:18 mail spamc[417487]: connect to spamd on ::1 failed, retrying (#1 of 3): Connection refused
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################
+
+
 
 
 
@@ -579,6 +702,10 @@ cp "${LOCATION_OF_MY_FILES}/%etc%dovecot%conf.d%20-lmtp.conf" /etc/dovecot/conf.
 # In: /etc/dovecot/conf.d/90-sieve.conf are specified sieve files to be executed
 cp "${LOCATION_OF_MY_FILES}/%etc%dovecot%conf.d%90-sieve.conf" /etc/dovecot/conf.d/90-sieve.conf
 
+# Logging file setting dovecot logs to /var/log/dovecot.log
+cp "${LOCATION_OF_MY_FILES}/%etc%dovecot%conf.d%10-logging.conf" /etc/dovecot/conf.d/10-logging.conf
+
+
 cp "${LOCATION_OF_MY_FILES}/%var%mail%sieve.d%sieve_before%SpamToJunk.sieve" /var/mail/sieve.d/sieve_before/SpamToJunk.sieve
 cp "${LOCATION_OF_MY_FILES}/%var%mail%sieve.d%sieve_before%JUSTEURO_INTERNAL.sieve" /var/mail/sieve.d/sieve_before/JUSTEURO_INTERNAL.sieve
 
@@ -641,6 +768,7 @@ systemctl restart amavis
 
 
 ### Integrate Amavis with ClamAV
+
 apt-get install -y clamav clamav-daemon
 # There will be two systemd services installed by ClamAV:
 #   clamav-daemon.service: the Clam AntiVirus userspace daemon
@@ -674,8 +802,58 @@ adduser clamav amavis
 systemctl restart amavis clamav-daemon
 #!!! systemctl restart amavis clamav-daemon
 
-# Test if received email have:
+# Test: if received email have:
 # ex. header: X-Virus-Scanned: Debian amavisd-new at justeuro.eu
+
+
+
+
+################################################################################
+### ClamAV Automatic Shutdown
+################################################################################
+#
+# I found that the clamav-daemon service has a tendency to stop without clear reason
+# even when there’s enough RAM. This will delay emails for 1 minute. 
+# We can configure it to automatically restart if it stops via the systemd service unit. 
+
+# Manual
+function clamav_auto_restart_manual() {
+  # Copy the original service unit file to the /etc/systemd/system/ directory.
+  cp /lib/systemd/system/clamav-daemon.service /etc/systemd/system/clamav-daemon.service
+  # Then edit the service unit file.
+  vim /etc/systemd/system/clamav-daemon.service
+  # Add the following two lines in the [service] section.
+  Restart=always
+  RestartSec=3
+
+  # Like this:
+  [Service]
+  ExecStart=/usr/sbin/clamd --foreground=true
+  # Reload the database
+  ExecReload=/bin/kill -USR2 $MAINPID
+  StandardOutput=syslog
+  Restart=always
+  RestartSec=3
+
+  # Save and close the file. Then reload systemd and restart clamav-daemon.service.
+  systemctl daemon-reload
+  systemctl restart clamav-daemon
+}
+
+
+# Same as above but done by copying already edited file
+# NOTE: take care that /etc/systemd/system/clamav-daemon.service differs from
+# original: /lib/systemd/system/clamav-daemon.service only with above two lines
+cp "${LOCATION_OF_MY_FILES}/%etc%systemd%system%clamav-daemon.service" /etc/systemd/system/clamav-daemon.service
+systemctl daemon-reload
+systemctl restart clamav-daemon
+
+
+
+
+
+
+
 
 
 
@@ -891,6 +1069,34 @@ systemctl status opendkim postfix dovecot policyd-rate-limit spamass-milter spam
 
 
 exit 0
+
+
+
+# Find out enabled services
+systemctl list-unit-files | grep enabled
+# Find out currently running services
+systemctl | grep running.
+
+# OR
+
+# Not sure which one is good
+
+systemctl list-unit-files --state=enabled
+systemctl list-unit-files --state=failed
+
+# To list all the systemd service which are in state=active and sub=running
+systemctl list-units --type=service --state=running
+# To list all the systemd serice which are in state=active and sub either running or exited
+systemctl list-units --type=service --state=active
+
+
+# To enable and start at the same time: 
+systemctl enable --now ...
+
+
+
+# TODO(tim): enable all below services
+opendkim postfix dovecot policyd-rate-limit spamass-milter spamassassin amavis clamav-freshclam clamav-daemon unbound unbound-resolvconf
 
 
 
@@ -1229,3 +1435,9 @@ sudo su -s /bin/bash -c "gpg --list-keys" www-data
 #
 # How to Install Mailtrain v2
 # https://www.linuxbabe.com/ubuntu/install-mailtrain-v2-ubuntu-20-04
+
+
+
+
+# Troubleshooting Problems with Postfix, Dovecot, and MySQL
+# https://www.linode.com/docs/guides/troubleshooting-problems-with-postfix-dovecot-and-mysql/
