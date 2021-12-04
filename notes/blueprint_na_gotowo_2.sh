@@ -2,162 +2,19 @@
 #
 # 
 
+
+################################# TODOS ########################################
+
 # TODO(tim): processing dovecot-core takes ton of time probably because it fails and retries (set sieve closer to dovecot or before)
-
-# TODO(tim): trash and spam do not create at start think if it should behave that way
-# Cuz it fails: doveadm expunge -A mailbox Junk savedbefore 2w;doveadm expunge -A mailbox Trash savedbefore 2w
-
 
 # TODO(tim): TEST spamassasin user_prefs
 
-# TODO(tim): ERROR admin@justeuro.eu dont send automaticaly email 
-# BTW change that email in: /etc/postfixadmin/config.inc.php
-#
-# Found out It only sends to email created manually if the admin@justeuro.eu is already created
-# But even though it fails so with bounce as follows: (you have to send email on the start even with a script)
+# NOTE: to change welcome email edit: /etc/postfixadmin/config.inc.php
+# or 'mailbox_postcreation_script' in same file
 
-Transcript of session follows.
-
- Out: 220 mail.justeuro.eu ESMTP Postfix (Ubuntu)
- In:  EHLO
- Out: 501 Syntax: EHLO hostname
- In:  MAIL FROM:<admin@justeuro.eu>
- Out: 503 5.5.1 Error: send HELO/EHLO first
- In:  RCPT TO:<aeng4xaaphahku8eph7ogh2paichiequez7aixum4eef6aije@justeuro.eu>
- Out: 503 5.5.1 Error: need MAIL command
- In:  DATA
- Out: 503 5.5.1 Error: need RCPT command
- In:  To: aeng4xaaphahku8eph7ogh2paichiequez7aixum4eef6aije@justeuro.eu
- Out: 221 2.7.0 Error: I can break rules, too. Goodbye.
-
-
-For other details, see the local mail logfile
-
-# TODO(tim): test smtp with telnet!
-
-
-# TODO(tim): think of not sending emails from root (cronjob)
-
-
-# TODO(tim): Install certbot cuz as you copy letsencrypt you dont install it (but you have to renew it)
-# and in full backup do git push letsencrypt
-
-# Install pflogsumm also cuz cronjob
-
-
-### Testing email
-
-# Complex tests
-https://mxtoolbox.com/SuperTool.aspx
-https://mxtoolbox.com/diagnostic.aspx
-
-# Inbound emails will be delayed for a few minutes, because greylisting is enabled, 
-# which tells other sending SMTP server to try delivering the email again after several minutes.
-# This is useful to block spam. 
-# The following message in /var/log/mail.log indicates greylisting is enabled.
-# |
-# | postfix/postscreen[20995]: NOQUEUE: reject: RCPT from [34.209.113.130]:36980: 450 4.3.2 Service currently unavailable;
-# |
-# However, greylisting can be rather annoying. 
-# You can disable it by editing the Postfix main configuration file: 
-# /etc/postfix/main.cf
-# Find the following lines at the end of the file and comment them out. 
-# (Add a # character at the beginning of each line.)
-# |
-# | postscreen_pipelining_enable = yes
-# | postscreen_pipelining_action = enforce
-# | 
-# | postscreen_non_smtp_command_enable = yes
-# | postscreen_non_smtp_command_action = enforce
-# | 
-# | postscreen_bare_newline_enable = yes
-# | postscreen_bare_newline_action = enforce
-# | 
-# Save and close the file. Then restart Postfix for the changes to take effect.
-# | systemctl restart postfix
-# Now you should be able to receive emails without waiting several minutes.
-https://www.wormly.com/test-smtp-server
-
-# Testing email
-https://www.mail-tester.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-mail.err
-
-Dec  3 04:12:14 mail spamass-milter[47460]: spamass-milter 0.4.0 starting
-Dec  3 04:12:20 mail spamass-milter[47574]: spamass-milter 0.4.0 starting
-Dec  3 04:12:25 mail postfix/master[33575]: fatal: :::submission: Address family for hostname not supported
-Dec  3 04:12:26 mail postfix/postfix-script[48041]: fatal: the Postfix mail system is not running
-Dec  3 04:19:59 mail dovecot: master: Fatal: service(lmtp) access(/usr/lib/dovecot/lmtp) failed: No such file or directory
-Dec  3 04:21:47 mail spamass-milter[232688]: spamass-milter 0.4.0 starting
-Dec  3 04:50:19 mail spamass-milter[232688]: Could not retrieve sendmail macro "i"!.  Please add it to confMILTER_MACROS_ENVFROM for better spamassassin results
-Dec  3 04:50:19 mail spamc[234109]: connect to spamd on ::1 failed, retrying (#1 of 3): Connection refused
-Dec  3 04:54:57 mail spamc[234187]: connect to spamd on ::1 failed, retrying (#1 of 3): Connection refused
-Dec  3 06:18:02 mail postfix/sendmail[415018]: fatal: User amavis(119) is not allowed to submit mail
-Dec  3 12:58:54 mail spamc[417365]: connect to spamd on ::1 failed, retrying (#1 of 3): Connection refused
-Dec  3 13:06:34 mail spamc[417445]: connect to spamd on ::1 failed, retrying (#1 of 3): Connection refused
-Dec  3 13:08:18 mail spamc[417487]: connect to spamd on ::1 failed, retrying (#1 of 3): Connection refused
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# TODO(tim): you can cat a source file and > to dest file keeping its permissions and ownership
 
 ################################################################################
-
-
 
 
 
@@ -1040,10 +897,10 @@ apt-get install -y dovecot-sieve dovecot-managesieved
 # Install the Dovecot LMTP Server.
 apt-get install -y dovecot-lmtpd
 
-systemctl restart postfix dovecot # not really needed
 
 
-# TODO(tim): RESTART ALL SERVICES HERE
+
+
 
 systemctl daemon-reload
 systemctl restart opendkim postfix dovecot policyd-rate-limit spamass-milter spamassassin amavis clamav-freshclam clamav-daemon unbound unbound-resolvconf
@@ -1064,6 +921,16 @@ systemctl status opendkim postfix dovecot policyd-rate-limit spamass-milter spam
 # after editing always do: postmap /etc/postfix/smtp_header_checks
 # and in main.cf  smtp_header_checks  directive regulates it 
 # systemctl reload postfix
+
+
+
+# Pflogsumm is a great tool to create a summary of Postfix logs. Install it on Ubuntu with:
+apt-get install -y pflogsumm
+
+
+
+
+
 
 
 
